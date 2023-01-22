@@ -1,4 +1,5 @@
 #include <iostream>
+#include "solve.h"
 
 #define N 81
 #define A 9
@@ -6,6 +7,8 @@
 
 void print(int sudoku[])
 {
+		// for terminal interface
+
 		char line[] = " ------- ------- ------- \n";
 
 		for (int i = 0; i < A; i++)
@@ -28,6 +31,8 @@ void print(int sudoku[])
 
 void fill(int sudoku[])
 {
+
+		
 
 
 }
