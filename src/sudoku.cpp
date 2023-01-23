@@ -4,6 +4,7 @@
 #include <array>
 #include "includes/generate.h"
 #include "includes/init.h"
+#include "includes/utils.h"
 
 #define N 81
 #define A 9
