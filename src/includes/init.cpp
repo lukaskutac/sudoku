@@ -1,19 +1,23 @@
 #include <iostream>
-#include "generate.h"
+#include "sort.h"
 #include "utils.h"
 
-#define N 81
-#define A 9
-#define B 3
+#define N 81		// sudoku size
+#define A 9			// row/col size
+#define B 3			// box size
 
-void init_box(int box[A])		// initialize box array
+void init_box(int box[A])		
 {														
+		// initialize box array
+		
 		for (int i = 0; i < A; i++)
 				box[i] = i + 1;
 }
 
-void init_sudoku(int sudoku[N])			// initialize sudoku array box by box
+void init_sudoku(int sudoku[N])			
 {
+		// initialize sudoku array box by box
+		
 		int box[A] = {0};
 		int index = 0;
 

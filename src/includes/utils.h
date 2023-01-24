@@ -4,6 +4,10 @@
 #define A 9
 #define B 3
 
-void print(int[N]);
+void print(int*);
 
-void shuffle_box(int[A]);
+void shuffle_box(int*);
+
+bool row_col_is_valid(int*, bool, int, int);
+
+bool sudoku_is_valid(int*);

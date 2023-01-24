@@ -1,15 +1,17 @@
 #include <iostream>
 #include <random>
-#include "utils.h"
 
-#define N 81
-#define A 9
-#define B 3
+#define N 81		// sudoku size
+#define A 9			// row/col size
+#define B 3			// box size
 
 std::random_device rd;
 
-void print(int sudoku[])		// formats the sudoku grid for better readability
+
+void print(int* sudoku)		
 {
+		// formats the sudoku grid for better readability
+		
 		char line[] = " ------- ------- ------- \n";
 
 		for (int i = 0; i < A; i++)
@@ -29,10 +31,44 @@ void print(int sudoku[])		// formats the sudoku grid for better readability
 		printf("%s", line);
 }
 
-void shuffle_box(int box[A])		// shuffle initialized box array
+
+void shuffle_box(int* box)		
 {
+		// shuffle initialized box array
+		
 		std::uniform_int_distribution<int> dist(0, 7);
 
 		for (int i = 8; i > 0; i--)
 				std::swap(box[i], box[dist(rd) % i]);
+}
+
+bool row_col_is_valid(int* sudoku, bool mode, int index, int num)		
+{
+		// validates row or column based on mode (mode == false -> check row, mode == true -> check column)
+		// num is for checking a different value than sudoku[index] (checking possible numbers)
+
+		int value = (num == 0) ? sudoku[index] : num;
+		int decrementor = (mode) ? A : 1;
+		int end = (mode) ? index % A : (index / A) * A;
+
+		for (int i = index - decrementor; i >= end; i -= decrementor)
+				if (sudoku[i] == value)
+						return false;
+
+		return true;
+}
+
+bool sudoku_is_valid(int* sudoku)
+{
+		// basiclly just repeatedly calls row_col_is_valid in both modes to check all rows and cols
+		 
+		for (int i = 0; i < N; i++)
+				if (!row_col_is_valid(sudoku, 0, i, 0))
+						return false;
+
+		for (int i = 0; i < N; i++)
+				if (!row_col_is_valid(sudoku, 1, i, 0))
+						return false;
+
+		return true;
 }
