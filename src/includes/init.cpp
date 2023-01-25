@@ -6,7 +6,7 @@
 #define A 9			// row/col size
 #define B 3			// box size
 
-void init_box(int box[A])		
+void init_box(int* box)		
 {														
 		// initialize box array
 		
@@ -14,7 +14,7 @@ void init_box(int box[A])
 				box[i] = i + 1;
 }
 
-void init_sudoku(int sudoku[N])			
+void init_sudoku(int* sudoku)			
 {
 		// initialize sudoku array box by box
 		

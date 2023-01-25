@@ -72,3 +72,13 @@ bool sudoku_is_valid(int* sudoku)
 
 		return true;
 }
+
+int available_box_index(int index)
+{
+		// returns first index in a box that is available to try to switch with
+		
+		
+		
+
+		return (index / A > index % A) ? index % A + (index / A) * A : index / A + (index % A) ;
+}

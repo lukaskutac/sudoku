@@ -11,3 +11,5 @@ void shuffle_box(int*);
 bool row_col_is_valid(int*, bool, int, int);
 
 bool sudoku_is_valid(int*);
+
+int available_box_index(int);

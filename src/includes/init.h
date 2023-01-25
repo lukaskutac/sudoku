@@ -3,6 +3,6 @@
 #define N 81
 #define A 9
 
-void init_box(int[A]);
+void init_box(int*);
 
-void init_sudoku(int[N]);
+void init_sudoku(int*);

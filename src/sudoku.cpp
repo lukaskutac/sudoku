@@ -14,24 +14,5 @@ int main()
 		init_sudoku(sudoku);
 		print(sudoku);
 
-    printf("Invalid row indices: \n");
-    for (int i = 0; i < N; i++)
-    {
-        if (!row_col_is_valid(sudoku, 0, i, 0))
-            printf("index: %d\n", i);
-    }
-
-    printf("Invalid col indices: \n");
-    for (int i = 0; i < N; i++)
-    {
-        if (!row_col_is_valid(sudoku, 1, i, 0))
-            printf("index: %d\n", i);
-    }
-
-		if (sudoku_is_valid(sudoku))
-				printf("SuDoKu is valid! Yaaay\n");
-		else
-				printf("SuDoKu is invalid! Naaay\n");
-
     return 0;
 }
