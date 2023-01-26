@@ -61,6 +61,8 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 bool sudoku_is_valid(int* sudoku)
 {
 		// basiclly just repeatedly calls row_col_is_valid in both modes to check all rows and cols
+		// pozn. vylepsit: pouzit bool array a pokud bude prvek zaznamenan nastavi se index o jeho hodnote na true,
+		// pokud po cele iteraci bude nejaky prvek false -> return false jinak true
 		 
 		for (int i = 0; i < N; i++)
 				if (!row_col_is_valid(sudoku, 0, i, 0))
@@ -73,12 +75,13 @@ bool sudoku_is_valid(int* sudoku)
 		return true;
 }
 
-int available_box_index(int index)
+bool is_available(int index, bool mode)
 {
-		// returns first index in a box that is available to try to switch with
+		// returns true if an index is available to swap with (meaning the number behind it hasn't been sorted yet
+		// or it has but it's adjacent to the duplicite number) otherwise returns false
 		
-		
-		
+		if (!mode)
+				if ()
 
-		return (index / A > index % A) ? index % A + (index / A) * A : index / A + (index % A) ;
+
 }
