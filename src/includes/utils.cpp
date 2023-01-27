@@ -46,6 +46,7 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 {
 		// validates row or column based on mode (mode == false -> check row, mode == true -> check column)
 		// num is for checking a different value than sudoku[index] (checking possible numbers)
+		// checking of the num parameter doesn't work yet
 
 		int value = (num == 0) ? sudoku[index] : num;
 		int decrementor = (mode) ? A : 1;
@@ -82,6 +83,8 @@ bool is_available(int index, bool mode)
 		
 		if (!mode)
 				if ()
+		else
+
 
 
 }
