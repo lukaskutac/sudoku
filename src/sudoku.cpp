@@ -13,6 +13,9 @@ int main()
 
 		init_sudoku(sudoku);
 		print(sudoku);
+    sort_sudoku(sudoku);
+    print(sudoku);
+    
 
     return 0;
 }

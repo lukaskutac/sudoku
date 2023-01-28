@@ -12,6 +12,8 @@ void print(int* sudoku)
 {
 		// formats the sudoku grid for better readability
 		
+		printf("\n");
+		
 		char line[] = " ------- ------- ------- \n";
 
 		for (int i = 0; i < A; i++)
@@ -28,7 +30,7 @@ void print(int* sudoku)
 				printf("|\n");
 		}
 
-		printf("%s", line);
+		printf("%s\n", line);
 }
 
 
@@ -76,15 +78,41 @@ bool sudoku_is_valid(int* sudoku)
 		return true;
 }
 
-bool is_available(int index, bool mode)
+int previous_instance(int* sudoku, int index, bool mode)
 {
-		// returns true if an index is available to swap with (meaning the number behind it hasn't been sorted yet
+		// looks for previous instance of number behind index depending on mode
+				
+		int decrementor = mode ? A : 1;
+		int first_index = mode ? index - A : index - 1;
+		int last_index = mode ? index % A : (index / A) * A;
+
+		for (int i = first_index; i >= last_index; i--)
+				if (sudoku[index] == sudoku[i])
+						return i;
+}
+
+bool is_available(int index, int candidate_index, bool mode)
+{
+		// returns true if candidate_index is available to swap with (meaning the number behind it hasn't been sorted yet
 		// or it has but it's adjacent to the duplicite number) otherwise returns false
 		
+		if (index == candidate_index)
+				return false;
+
 		if (!mode)
-				if ()
+		{
+				if (index / A >= candidate_index / A)
+						return false;
+				if (index / A >= candidate_index % A)	// +1 because the column isn't sorted yet
+						return false;
+		}
 		else
+		{
+				if (index % A >= candidate_index % A)
+						return false;
+				if (index % A >= candidate_index / A)
+						return false;
+		}
 
-
-
+		return true;
 }

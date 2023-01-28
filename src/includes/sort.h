@@ -4,4 +4,6 @@
 #define A 9			// row/col size
 #define B 3			// box size
 
-void nothing();
+void row_col_fix(int*, bool, int);
+
+void sort_sudoku(int*);
