@@ -11,10 +11,17 @@ int main()
 {
     int sudoku[81] = {0};
 
-		init_sudoku(sudoku);
-		print(sudoku);
-    sort_sudoku(sudoku);
-    print(sudoku);
+		while (true)
+		{
+				init_sudoku(sudoku);
+				print(sudoku);
+				sort_sudoku(sudoku);
+				print(sudoku);
+				if (!sudoku_is_valid(sudoku))
+						return 0;
+		}
+
+		// puzzle_sudoku(sudoku);
     
 
     return 0;

@@ -7,7 +7,6 @@
 
 std::random_device rd;
 
-
 void print(int* sudoku)		
 {
 		// formats the sudoku grid for better readability
@@ -51,11 +50,12 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 		// checking of the num parameter doesn't work yet
 
 		int value = (num == 0) ? sudoku[index] : num;
-		int decrementor = (mode) ? A : 1;
-		int end = (mode) ? index % A : (index / A) * A;
+		int decrementor = mode ? A : 1;
+		int first_index = (num == 0) ? (index - decrementor) : (mode ? (index % A) + (A - 1) * A : (index / A) * A + (A - 1));
+		int last_index = mode ? index % A : (index / A) * A;
 
-		for (int i = index - decrementor; i >= end; i -= decrementor)
-				if (sudoku[i] == value)
+		for (int i = first_index; i >= last_index; i -= decrementor)
+				if (i != index && sudoku[i] == value)
 						return false;
 
 		return true;
@@ -67,12 +67,25 @@ bool sudoku_is_valid(int* sudoku)
 		// pozn. vylepsit: pouzit bool array a pokud bude prvek zaznamenan nastavi se index o jeho hodnote na true,
 		// pokud po cele iteraci bude nejaky prvek false -> return false jinak true
 		 
-		for (int i = 0; i < N; i++)
+		/*
+		for (int i = 0; i < B; i++)
 				if (!row_col_is_valid(sudoku, 0, i, 0))
 						return false;
 
-		for (int i = 0; i < N; i++)
+		for (int i = 0; i < B; i++)
 				if (!row_col_is_valid(sudoku, 1, i, 0))
+						return false;
+						*/
+
+		bool registered[A] = {false};
+
+		for (int i = 0; i < B; i++)
+				for (int j = i * A; j < i * A + A; j++)
+						if (!registered[sudoku[i] - 1])
+								registered[sudoku[i] - 1] = true;
+
+		for (int i = 0; i < A; i++)
+				if (!registered[i])
 						return false;
 
 		return true;
@@ -86,31 +99,52 @@ int previous_instance(int* sudoku, int index, bool mode)
 		int first_index = mode ? index - A : index - 1;
 		int last_index = mode ? index % A : (index / A) * A;
 
-		for (int i = first_index; i >= last_index; i--)
+		for (int i = first_index; i >= last_index; i -= decrementor)
 				if (sudoku[index] == sudoku[i])
 						return i;
+
+		return 0;
 }
 
 bool is_available(int index, int candidate_index, bool mode)
 {
 		// returns true if candidate_index is available to swap with (meaning the number behind it hasn't been sorted yet
 		// or it has but it's adjacent to the duplicite number) otherwise returns false
-		
+
+		/*
+				if (index % 10 >= index % A && index % A == candidate_index % A)		// adjacent index
+						return true;
+			 */
+
 		if (index == candidate_index)
 				return false;
 
 		if (!mode)
 		{
-				if (index / A >= candidate_index / A)
+				if (index / A >= candidate_index / A)		// only number that's below index
 						return false;
-				if (index / A >= candidate_index % A)	// +1 because the column isn't sorted yet
+				if (index % A < index / A)							// number that's in the sorted part
+				{
+						if (index % A == candidate_index % A)		// number that's in the same column as index
+								return true;
+						else																		// number that's in the sorted part but different column than index
+								return false;
+				}
+				if (index / A > candidate_index % A)		// number that's below or on the right side of index
 						return false;
 		}
 		else
 		{
-				if (index % A >= candidate_index % A)
+				if (index % A >= candidate_index % A)		// only number that's on the right side of index
 						return false;
-				if (index % A >= candidate_index / A)
+				if (index / A <= index % A)							// number that's in the sorted part
+				{
+						if (index / A == candidate_index / A)		// number that's in the same row as index
+								return true;
+						else																		// number that's in the sorted part but different row than index
+								return false;
+				}
+				if (index % A >= candidate_index / A)		// only number that's below index 
 						return false;
 		}
 
