@@ -28,12 +28,29 @@ try_prev:
 
 		if (!tried_prev)
 		{
-				index = previous_instance(sudoku, index, mode);
+				index = previous_instance(sudoku, index, mode, 0);
 				tried_prev = true;
 				goto try_prev;
 		}
 
 		return false;
+}
+
+bool try_swap(int* sudoku, bool mode, int index)
+{
+		int offset = mode ? 1 : A;
+		bool swapped[A];
+
+		for (int i = 0; i < 18; i++)
+		{
+				std::swap(sudoku[index], sudoku[index + offset]);
+				index = previous_instance(sudoku, index, mode, sudoku[index]);
+				if (index < 0)
+						return true;
+		}
+
+		return false;
+
 }
 
 void sort_sudoku(int* sudoku)
@@ -56,7 +73,8 @@ void sort_sudoku(int* sudoku)
 						for (int k = first_index; k <= last_index; k += incrementor)
 								if (!row_col_is_valid(sudoku, j, k, 0))
 										if (!row_col_fix(sudoku, j, k))
-												printf("PAS needed...; index: %d\n", k);
+												printf("ABS is needed... \n");
+												//if (!try_swap(sudoku, j, k))
 
 						printf("gen: %d, mode: %s", i, j ? "col" : "row");
 						print(sudoku);

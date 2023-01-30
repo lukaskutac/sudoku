@@ -91,30 +91,33 @@ bool sudoku_is_valid(int* sudoku)
 		return true;
 }
 
-int previous_instance(int* sudoku, int index, bool mode)
+int previous_instance(int* sudoku, int index, bool mode, int num)
 {
 		// looks for previous instance of number behind index depending on mode
 				
 		int decrementor = mode ? A : 1;
-		int first_index = mode ? index - A : index - 1;
+		int first_index = (num == 0) ? (mode ? index - A : index - 1) : (mode ? index % A + 72 : (index / A) * A + 8 );
 		int last_index = mode ? index % A : (index / A) * A;
+		int value = (num == 0) ? sudoku[index] : num;
 
+		/*
+		 * bool swapped[A];
+
+			 if (swapped[mode ? i / A : i % A])
+			 return i;
+
+			 */
 		for (int i = first_index; i >= last_index; i -= decrementor)
-				if (sudoku[index] == sudoku[i])
+				if (value == sudoku[i])
 						return i;
 
-		return 0;
+		return -1;
 }
 
 bool is_available(int index, int candidate_index, bool mode)
 {
 		// returns true if candidate_index is available to swap with (meaning the number behind it hasn't been sorted yet
 		// or it has but it's adjacent to the duplicite number) otherwise returns false
-
-		/*
-				if (index % 10 >= index % A && index % A == candidate_index % A)		// adjacent index
-						return true;
-			 */
 
 		if (index == candidate_index)
 				return false;
