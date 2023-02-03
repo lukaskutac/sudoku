@@ -38,19 +38,24 @@ try_prev:
 
 bool try_swap(int* sudoku, bool mode, int index)
 {
+		// forces to switch the repeating number with the adjacent number so then a different number 
+		// is being repeated, then it forces to switch this number with the number adjacent to it and 
+		// it just repeats that until the row/col is sorted
+		
 		int offset = mode ? 1 : A;
+		int swap_index = index;
+		int base = mode ? index % A : (index / A) * A;
 		bool swapped[A];
-
+		
 		for (int i = 0; i < 18; i++)
 		{
-				std::swap(sudoku[index], sudoku[index + offset]);
-				index = previous_instance(sudoku, index, mode, sudoku[index]);
-				if (index < 0)
+				std::swap(sudoku[swap_index], sudoku[swap_index + offset]);
+				swap_index = previous_instance(sudoku, swap_index, mode, sudoku[swap_index]);
+				if (swap_index < 0)
 						return true;
 		}
 
 		return false;
-
 }
 
 void sort_sudoku(int* sudoku)
@@ -73,11 +78,12 @@ void sort_sudoku(int* sudoku)
 						for (int k = first_index; k <= last_index; k += incrementor)
 								if (!row_col_is_valid(sudoku, j, k, 0))
 										if (!row_col_fix(sudoku, j, k))
-												printf("ABS is needed... \n");
-												//if (!try_swap(sudoku, j, k))
+												if (!try_swap(sudoku, j, k))
+														if (!sudoku_is_valid(sudoku))
+																printf("sudoku je invalidni\n");
 
-						printf("gen: %d, mode: %s", i, j ? "col" : "row");
-						print(sudoku);
+						//printf("gen: %d, mode: %s", i, j ? "col" : "row");
+						//print(sudoku);
 
 				}
 		}

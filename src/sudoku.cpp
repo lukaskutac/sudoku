@@ -14,11 +14,14 @@ int main()
 		while (true)
 		{
 				init_sudoku(sudoku);
-				print(sudoku);
+				//print(sudoku);
 				sort_sudoku(sudoku);
 				print(sudoku);
 				if (!sudoku_is_valid(sudoku))
-						return 0;
+				{
+						print(sudoku);
+						break;
+				}
 		}
 
 		// puzzle_sudoku(sudoku);

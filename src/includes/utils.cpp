@@ -67,16 +67,15 @@ bool sudoku_is_valid(int* sudoku)
 		// pozn. vylepsit: pouzit bool array a pokud bude prvek zaznamenan nastavi se index o jeho hodnote na true,
 		// pokud po cele iteraci bude nejaky prvek false -> return false jinak true
 		 
-		/*
-		for (int i = 0; i < B; i++)
+		for (int i = 0; i < A; i++)
 				if (!row_col_is_valid(sudoku, 0, i, 0))
 						return false;
 
-		for (int i = 0; i < B; i++)
+		for (int i = 0; i < A; i++)
 				if (!row_col_is_valid(sudoku, 1, i, 0))
 						return false;
-						*/
 
+		/*
 		bool registered[A] = {false};
 
 		for (int i = 0; i < B; i++)
@@ -87,6 +86,7 @@ bool sudoku_is_valid(int* sudoku)
 		for (int i = 0; i < A; i++)
 				if (!registered[i])
 						return false;
+						*/
 
 		return true;
 }
@@ -108,7 +108,7 @@ int previous_instance(int* sudoku, int index, bool mode, int num)
 
 			 */
 		for (int i = first_index; i >= last_index; i -= decrementor)
-				if (value == sudoku[i])
+				if (value == sudoku[i] && index != i)
 						return i;
 
 		return -1;
