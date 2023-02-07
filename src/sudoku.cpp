@@ -10,22 +10,23 @@
 int main()
 {
     int sudoku[81] = {0};
+		int counter = 0;
 
 		while (true)
 		{
+				counter++;
 				init_sudoku(sudoku);
-				//print(sudoku);
 				sort_sudoku(sudoku);
-				print(sudoku);
+
 				if (!sudoku_is_valid(sudoku))
 				{
+						printf("counter: %d\n", counter);
 						print(sudoku);
 						break;
 				}
 		}
 
 		// puzzle_sudoku(sudoku);
-    
 
     return 0;
 }

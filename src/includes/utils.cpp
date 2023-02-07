@@ -55,38 +55,59 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 		int last_index = mode ? index % A : (index / A) * A;
 
 		for (int i = first_index; i >= last_index; i -= decrementor)
-				if (i != index && sudoku[i] == value)
+				if ((i != index || num != 0) && sudoku[i] == value)
 						return false;
 
 		return true;
 }
 
+void reset (bool* arr, int size)
+{
+		// sets all elements of given bool array to 0
+
+		for (int i = 0; i < size; i++)
+				arr[i] = 0;
+
+		return;
+}
+
 bool sudoku_is_valid(int* sudoku)
 {
-		// basiclly just repeatedly calls row_col_is_valid in both modes to check all rows and cols
+		// basically just repeatedly calls row_col_is_valid in both modes to check all rows and cols
 		// pozn. vylepsit: pouzit bool array a pokud bude prvek zaznamenan nastavi se index o jeho hodnote na true,
 		// pokud po cele iteraci bude nejaky prvek false -> return false jinak true
 		 
+		bool registered_in_row[A];
+		bool registered_in_col[A];
+		//bool registered_in_box[A] = {false};
+
+		// checking all rows
+		for (int i = 0; i < N; i += A)
+		{
+				reset(registered_in_row, A);
+
+				for (int j = 0; j < A; j++)
+				{
+						if (!registered_in_row[sudoku[i + j] - 1])
+								registered_in_row[sudoku[i + j] - 1] = true;
+						else 
+								return false;
+				}
+		}
+
+		// checking all columns
 		for (int i = 0; i < A; i++)
-				if (!row_col_is_valid(sudoku, 0, i, 0))
-						return false;
+		{
+				reset(registered_in_col, A);
 
-		for (int i = 0; i < A; i++)
-				if (!row_col_is_valid(sudoku, 1, i, 0))
-						return false;
-
-		/*
-		bool registered[A] = {false};
-
-		for (int i = 0; i < B; i++)
-				for (int j = i * A; j < i * A + A; j++)
-						if (!registered[sudoku[i] - 1])
-								registered[sudoku[i] - 1] = true;
-
-		for (int i = 0; i < A; i++)
-				if (!registered[i])
-						return false;
-						*/
+				for (int j = 0; j < N; j += A)
+				{
+						if (!registered_in_col[sudoku[i + j] - 1])
+								registered_in_col[sudoku[i + j] - 1] = true;
+						else 
+								return false;
+				}
+		}
 
 		return true;
 }

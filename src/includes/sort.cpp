@@ -78,9 +78,7 @@ void sort_sudoku(int* sudoku)
 						for (int k = first_index; k <= last_index; k += incrementor)
 								if (!row_col_is_valid(sudoku, j, k, 0))
 										if (!row_col_fix(sudoku, j, k))
-												if (!try_swap(sudoku, j, k))
-														if (!sudoku_is_valid(sudoku))
-																printf("sudoku je invalidni\n");
+												try_swap(sudoku, j, k);
 
 						//printf("gen: %d, mode: %s", i, j ? "col" : "row");
 						//print(sudoku);

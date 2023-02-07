@@ -10,6 +10,8 @@ void shuffle_box(int*);
 
 bool row_col_is_valid(int*, bool, int, int);
 
+void reset(bool*, int);
+
 int previous_instance(int*, int, bool, int);
 
 bool sudoku_is_valid(int*);
