@@ -43,18 +43,36 @@ bool try_swap(int* sudoku, bool mode, int index)
 		// it just repeats that until the row/col is sorted
 		
 		int offset = mode ? 1 : A;
-		int swap_index = index;
-		int base = mode ? index % A : (index / A) * A;
-		bool swapped[A];
+		bool next_available = mode ? ((index % A) % B == 0) : ((index / A) % B == 0);
+		bool tried_next = false;
 		
+try_next:
+		int swap_index = index;
+
 		for (int i = 0; i < 18; i++)
 		{
+				//printf("index: %d, mode: %s before: \n", swap_index, mode ? "col" : "row");
+				//print(sudoku);
 				std::swap(sudoku[swap_index], sudoku[swap_index + offset]);
 				swap_index = previous_instance(sudoku, swap_index, mode, sudoku[swap_index]);
 				if (swap_index < 0)
 						return true;
+
+				//printf("index: %d, mode: %s, after: \n", swap_index, mode ? "col" : "row");
+				//print(sudoku);
 		}
 
+		if (!tried_next && next_available)
+		{
+				printf("tried_next\n");
+				offset *= 2;
+				tried_next = true;
+				goto try_next;
+		}
+		else
+				printf("failed next\n");
+
+		printf("try_swap failed at index: %d\n", index);
 		return false;
 }
 
@@ -79,10 +97,6 @@ void sort_sudoku(int* sudoku)
 								if (!row_col_is_valid(sudoku, j, k, 0))
 										if (!row_col_fix(sudoku, j, k))
 												try_swap(sudoku, j, k);
-
-						//printf("gen: %d, mode: %s", i, j ? "col" : "row");
-						//print(sudoku);
-
 				}
 		}
 }

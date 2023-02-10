@@ -91,7 +91,10 @@ bool sudoku_is_valid(int* sudoku)
 						if (!registered_in_row[sudoku[i + j] - 1])
 								registered_in_row[sudoku[i + j] - 1] = true;
 						else 
+						{
+								printf("index: %d\n", i + j);
 								return false;
+						}
 				}
 		}
 
@@ -105,7 +108,10 @@ bool sudoku_is_valid(int* sudoku)
 						if (!registered_in_col[sudoku[i + j] - 1])
 								registered_in_col[sudoku[i + j] - 1] = true;
 						else 
+						{
+								printf("index: %d\n", i + j);
 								return false;
+						}
 				}
 		}
 
@@ -116,23 +122,31 @@ int previous_instance(int* sudoku, int index, bool mode, int num)
 {
 		// looks for previous instance of number behind index depending on mode
 				
+		int incrementor = mode ? A : 1;
+		int first_index = mode ? index % A : (index / A) * A;
+		int last_index = (num == 0) ? (mode ? index - A : index - 1) : (mode ? index % A + 72 : (index / A) * A + 8 );
+		int value = (num == 0) ? sudoku[index] : num;
+
+		for (int i = first_index; i <= last_index; i += incrementor)
+				if (value == sudoku[i] && index != i)
+						return i;
+
+		return -1;
+
+		
+		/*
 		int decrementor = mode ? A : 1;
 		int first_index = (num == 0) ? (mode ? index - A : index - 1) : (mode ? index % A + 72 : (index / A) * A + 8 );
 		int last_index = mode ? index % A : (index / A) * A;
 		int value = (num == 0) ? sudoku[index] : num;
 
-		/*
-		 * bool swapped[A];
-
-			 if (swapped[mode ? i / A : i % A])
-			 return i;
-
-			 */
 		for (int i = first_index; i >= last_index; i -= decrementor)
 				if (value == sudoku[i] && index != i)
 						return i;
 
 		return -1;
+		*/
+		
 }
 
 bool is_available(int index, int candidate_index, bool mode)

@@ -7,6 +7,10 @@
 #define A 9
 #define B 3
 
+// try_swap nefunguje
+// kontrola prev instance je neajka divna
+// chybi ABS
+
 int main()
 {
     int sudoku[81] = {0};
