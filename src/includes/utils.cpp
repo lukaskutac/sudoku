@@ -50,11 +50,11 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 		// checking of the num parameter doesn't work yet
 
 		int value = (num == 0) ? sudoku[index] : num;
-		int decrementor = mode ? A : 1;
-		int first_index = (num == 0) ? (index - decrementor) : (mode ? (index % A) + (A - 1) * A : (index / A) * A + (A - 1));
-		int last_index = mode ? index % A : (index / A) * A;
+		int incrementor = mode ? A : 1;
+		int first_index = mode ? index % A : (index / A) * A;
+		int last_index = (num == 0) ? (index - incrementor) : (mode ? first_index + 72 : first_index + 8);
 
-		for (int i = first_index; i >= last_index; i -= decrementor)
+		for (int i = first_index; i >= last_index; i += incrementor)
 				if ((i != index || num != 0) && sudoku[i] == value)
 						return false;
 
@@ -63,7 +63,7 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 
 void reset (bool* arr, int size)
 {
-		// sets all elements of given bool array to 0
+		// sets all elements of given bool array to 0 (false)
 
 		for (int i = 0; i < size; i++)
 				arr[i] = 0;
@@ -124,7 +124,7 @@ int previous_instance(int* sudoku, int index, bool mode, int num)
 				
 		int incrementor = mode ? A : 1;
 		int first_index = mode ? index % A : (index / A) * A;
-		int last_index = (num == 0) ? (mode ? index - A : index - 1) : (mode ? index % A + 72 : (index / A) * A + 8 );
+		int last_index = (num == 0) ? (mode ? index - A : index - 1) : (mode ? first_index + 72 : first_index + 8 );
 		int value = (num == 0) ? sudoku[index] : num;
 
 		for (int i = first_index; i <= last_index; i += incrementor)
@@ -157,7 +157,7 @@ bool is_available(int index, int candidate_index, bool mode)
 		if (index == candidate_index)
 				return false;
 
-		if (!mode)
+		if (!mode)			// tells us if index is available for row
 		{
 				if (index / A >= candidate_index / A)		// only number that's below index
 						return false;
@@ -171,7 +171,7 @@ bool is_available(int index, int candidate_index, bool mode)
 				if (index / A > candidate_index % A)		// number that's below or on the right side of index
 						return false;
 		}
-		else
+		else		// tells us if index is available for column
 		{
 				if (index % A >= candidate_index % A)		// only number that's on the right side of index
 						return false;

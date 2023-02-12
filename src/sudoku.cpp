@@ -24,8 +24,8 @@ int main()
 
 				if (!sudoku_is_valid(sudoku))
 				{
-						printf("counter: %d\n", counter);
 						print(sudoku);
+						printf("counter: %d\n", counter);
 						break;
 				}
 		}
