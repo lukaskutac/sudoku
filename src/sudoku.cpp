@@ -6,10 +6,11 @@
 #define N 81
 #define A 9
 #define B 3
-
+// TODO:
 // try_swap nefunguje
 // kontrola prev instance je neajka divna
 // chybi ABS
+// ujednotit poradi parametru (mode, index, ...)
 
 int main()
 {

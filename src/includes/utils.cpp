@@ -49,12 +49,15 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 		// num is for checking a different value than sudoku[index] (checking possible numbers)
 		// checking of the num parameter doesn't work yet
 
+		if (index == 0)
+				return true;
+
 		int value = (num == 0) ? sudoku[index] : num;
 		int incrementor = mode ? A : 1;
 		int first_index = mode ? index % A : (index / A) * A;
 		int last_index = (num == 0) ? (index - incrementor) : (mode ? first_index + 72 : first_index + 8);
 
-		for (int i = first_index; i >= last_index; i += incrementor)
+		for (int i = first_index; i <= last_index; i += incrementor)
 				if ((i != index || num != 0) && sudoku[i] == value)
 						return false;
 
@@ -132,21 +135,6 @@ int previous_instance(int* sudoku, int index, bool mode, int num)
 						return i;
 
 		return -1;
-
-		
-		/*
-		int decrementor = mode ? A : 1;
-		int first_index = (num == 0) ? (mode ? index - A : index - 1) : (mode ? index % A + 72 : (index / A) * A + 8 );
-		int last_index = mode ? index % A : (index / A) * A;
-		int value = (num == 0) ? sudoku[index] : num;
-
-		for (int i = first_index; i >= last_index; i -= decrementor)
-				if (value == sudoku[i] && index != i)
-						return i;
-
-		return -1;
-		*/
-		
 }
 
 bool is_available(int index, int candidate_index, bool mode)
