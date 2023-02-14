@@ -16,4 +16,6 @@ int previous_instance(int*, int, bool, int);
 
 bool sudoku_is_valid(int*);
 
+void swap_ROC(int*, int, int, int, bool);
+
 bool is_available(int, int, bool);

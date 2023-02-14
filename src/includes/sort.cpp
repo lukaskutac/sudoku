@@ -36,7 +36,7 @@ try_prev:
 		return false;
 }
 
-bool try_swap(int* sudoku, bool mode, int index)
+void try_swap(int* sudoku, bool mode, int index, bool recursion)
 {
 		// forces to switch the repeating number with the adjacent number so then a different number 
 		// is being repeated, then it forces to switch this number's previous instance with the number 
@@ -46,8 +46,6 @@ bool try_swap(int* sudoku, bool mode, int index)
 		int swap_index = index;
 		int offset = mode ? 1 : A;
 		int counter;
-		int rnc;				// repeating number counter
-		int repeating[4] = {0};			// for numbers repeating in the switched row/col
 		bool looped;
 		bool next_available = mode ? ((index % A) % B == 0) : ((index / A) % B == 0);
 		bool tried_next = false;				// tried next row or column
@@ -57,8 +55,8 @@ try_again:
 		counter = 0;
 		looped = false;
 
-		printf("before: \n");
-		print(sudoku);
+		//printf("before: \n");
+		//print(sudoku);
 
 		while (true)
 		{
@@ -70,14 +68,14 @@ try_again:
 								looped = true;
 				}
 
-				printf("%d. swapped %d and %d at %d\n", counter, sudoku[swap_index], sudoku[swap_index + offset], swap_index);
+				//printf("%d. swapped %d and %d at %d\n", counter, sudoku[swap_index], sudoku[swap_index + offset], swap_index);
 				std::swap(sudoku[swap_index], sudoku[swap_index + offset]);
 				swap_index = previous_instance(sudoku, swap_index, mode, sudoku[swap_index]);
 				if (swap_index < 0)
 				{
-						printf("success!\n after: \n");
-						print(sudoku);
-						return true;
+						//printf("success!\n after: \n");
+						//print(sudoku);
+						return;
 				}
 
 				counter++;
@@ -87,7 +85,7 @@ try_again:
 		{
 				if (!tried_next)
 				{
-						offset *= 2;
+						offset = mode ? 2 : 18;
 						tried_next = true;
 						goto try_again;
 				}
@@ -98,30 +96,35 @@ try_again:
 						int incrementor = mode ? A : 1;
 						bool swap_set = false;
 
-						printf("swapping %s %d and %d\n", mode ? "cols" : "rows", first_index, first_index + offset / 2);
+						offset = recursion ? (mode ? 2 : 18) : (mode ? 1 : A);
+						tried_next = false;
+
+						//printf("swapping %s %d and %d\n", mode ? "cols" : "rows", first_index, first_index + offset);
+						swap_ROC(sudoku, first_index, last_index, incrementor, recursion);			// fix this so it's more better
+
 						for (int i = first_index; i <= last_index; i += incrementor)
 						{
-								std::swap(sudoku[i], sudoku[i + offset / 2]);
-								if (!row_col_is_valid(sudoku, mode, i, 0) && !swap_set)
+								if (!row_col_is_valid(sudoku, mode, i, 0))
 								{
-										swap_index = i;
+										//printf("recursive call for index: %d\n", i);
+										if (!row_col_fix(sudoku, mode, i))
+												try_swap(sudoku, mode, i, 1);
+
 										swap_set = true;
 								}
 						}
 						
 						if (!swap_set)
-								return true;
+								return;
 
 						swaped_ROC = true;
 						goto try_again;
 				}
 		}
 
-		printf("try_swap failed at index: %d\n", index);
-		printf("after: \n");
-		print(sudoku);
-
-		return false;
+		//printf("try_swap failed at index: %d\n", index);
+		//printf("after: \n");
+		//print(sudoku);
 }
 
 void sort_sudoku(int* sudoku)
@@ -145,8 +148,7 @@ void sort_sudoku(int* sudoku)
 						for (int k = first_index; k <= last_index; k += incrementor)
 								if (!row_col_is_valid(sudoku, j, k, 0))
 										if (!row_col_fix(sudoku, j, k))
-												if (!try_swap(sudoku, j , k))
-														k = first_index;
+												try_swap(sudoku, j , k, 0);
 				}
 		}
 }

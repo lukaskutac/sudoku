@@ -6,10 +6,9 @@
 #define N 81
 #define A 9
 #define B 3
+
 // TODO:
 // try_swap nefunguje
-// kontrola prev instance je neajka divna
-// chybi ABS
 // ujednotit poradi parametru (mode, index, ...)
 
 int main()
@@ -22,6 +21,9 @@ int main()
 				counter++;
 				init_sudoku(sudoku);
 				sort_sudoku(sudoku);
+
+				if (counter % 10000 == 0)
+						printf("counter: %d\n", counter);
 
 				if (!sudoku_is_valid(sudoku))
 				{

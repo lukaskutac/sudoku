@@ -55,7 +55,7 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 		int value = (num == 0) ? sudoku[index] : num;
 		int incrementor = mode ? A : 1;
 		int first_index = mode ? index % A : (index / A) * A;
-		int last_index = (num == 0) ? (index - incrementor) : (mode ? first_index + 72 : first_index + 8);
+		int last_index = (num == 0) ? ((index == 0) ? index : index - incrementor) : (mode ? first_index + 72 : first_index + 8);
 
 		for (int i = first_index; i <= last_index; i += incrementor)
 				if ((i != index || num != 0) && sudoku[i] == value)
@@ -135,6 +135,14 @@ int previous_instance(int* sudoku, int index, bool mode, int num)
 						return i;
 
 		return -1;
+}
+
+void swap_ROC(int* sudoku, int f_ix, int l_ix, int inc, bool recursion)
+{
+		int offset = recursion ? ((inc == 1) ? 18 : 2) : ((inc == 1) ? A : 1);
+
+		for (int i = f_ix; i <= l_ix; i += inc)
+				std::swap(sudoku[i], sudoku[i + offset]);
 }
 
 bool is_available(int index, int candidate_index, bool mode)
