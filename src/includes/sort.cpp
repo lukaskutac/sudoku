@@ -36,7 +36,7 @@ try_prev:
 		return false;
 }
 
-void try_swap(int* sudoku, bool mode, int index, bool recursion)
+bool try_swap(int* sudoku, bool mode, int index, bool backtrack)
 {
 		// forces to switch the repeating number with the adjacent number so then a different number 
 		// is being repeated, then it forces to switch this number's previous instance with the number 
@@ -44,10 +44,10 @@ void try_swap(int* sudoku, bool mode, int index, bool recursion)
 		// if that doesn't work it switches whole rows/cols and tries again
 		
 		int swap_index = index;
-		int offset = mode ? 1 : A;
+		int offset = backtrack ? (mode ? 2 : 18) : (mode ? 1 : A);
 		int counter;
 		bool looped;
-		bool next_available = mode ? ((index % A) % B == 0) : ((index / A) % B == 0);
+		bool next_available = backtrack ? false : (mode ? ((index % A) % B == 0) : ((index / A) % B == 0));
 		bool tried_next = false;				// tried next row or column
 		bool swaped_ROC = false;				// swap Row Or Column
 		
@@ -75,8 +75,11 @@ try_again:
 				{
 						//printf("success!\n after: \n");
 						//print(sudoku);
-						return;
+						return true;
 				}
+
+				if (counter % 1000 == 0 && counter != 0)
+						return false;
 
 				counter++;
 		}
@@ -89,6 +92,7 @@ try_again:
 						tried_next = true;
 						goto try_again;
 				}
+				/*
 				else if (!swaped_ROC)
 				{
 						int first_index = mode ? index % A : (index / A) * A;
@@ -106,7 +110,7 @@ try_again:
 						{
 								if (!row_col_is_valid(sudoku, mode, i, 0))
 								{
-										//printf("recursive call for index: %d\n", i);
+										printf("recursive call for index: %d\n", i);
 										if (!row_col_fix(sudoku, mode, i))
 												try_swap(sudoku, mode, i, 1);
 
@@ -120,11 +124,13 @@ try_again:
 						swaped_ROC = true;
 						goto try_again;
 				}
+				*/
 		}
 
 		//printf("try_swap failed at index: %d\n", index);
 		//printf("after: \n");
 		//print(sudoku);
+		return false;
 }
 
 void sort_sudoku(int* sudoku)
@@ -133,6 +139,9 @@ void sort_sudoku(int* sudoku)
 		int first_index;
 		int last_index;
 		int incrementor;
+		bool backtrack = false;
+		int bc = 0;			// backtrack counter
+		int parameters[18] = {0}; 
 
 		for (int i = 0; i < N; i += 10)
 		{
@@ -148,7 +157,54 @@ void sort_sudoku(int* sudoku)
 						for (int k = first_index; k <= last_index; k += incrementor)
 								if (!row_col_is_valid(sudoku, j, k, 0))
 										if (!row_col_fix(sudoku, j, k))
-												try_swap(sudoku, j , k, 0);
+												if (!try_swap(sudoku, j , k, 0))
+												{
+														backtrack = true;
+														parameters[bc] = j;
+														parameters[bc + 1] = k;
+														bc += 2;
+												}
 				}
+		}
+
+		if (backtrack)			// the middle col/row isn't getting sorted for some reason now, take a closer look at it u lazy fuck
+		{
+				int index = 0;
+				int first_index;
+				int incrementor;
+				int last_index;
+				bool found_rep;
+
+				//printf("before backtrack: \n");
+				//print(sudoku);
+
+				for (int i = 0; i < bc; i += 2)
+				{
+						first_index = parameters[i] ? (parameters[i + 1] % A) : ((parameters[i + 1] / A) * A);
+						last_index = parameters[i] ? (first_index + 72) : (first_index + 8);
+						incrementor = parameters[i] ? A : 1;
+						found_rep = false;
+
+						for (int j = first_index; j <= last_index; j += incrementor)
+						{
+								if (!row_col_is_valid(sudoku, parameters[i], j, 0))
+								{
+										found_rep = true;
+										index = j;
+										break;
+								}
+						}
+
+						if (!found_rep)
+								continue;
+
+						//printf("mode: %s, index %d\n", parameters[i] ? "col" : "row", index);
+
+						if (!try_swap(sudoku, parameters[i], index, backtrack))
+								printf("backtrack failed\n");
+				}
+
+				//printf("after backtrack: \n");
+				//print(sudoku);
 		}
 }

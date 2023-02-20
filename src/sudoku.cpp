@@ -22,7 +22,7 @@ int main()
 				init_sudoku(sudoku);
 				sort_sudoku(sudoku);
 
-				if (counter % 10000 == 0)
+				if (counter % 100000 == 0)
 						printf("counter: %d\n", counter);
 
 				if (!sudoku_is_valid(sudoku))
