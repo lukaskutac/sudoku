@@ -33,7 +33,7 @@ void print(int* sudoku)
 }
 
 
-void shuffle_box(int* box)		
+void shuffle_box(int* box)
 {
 		// shuffle initialized box array
 		
@@ -43,7 +43,19 @@ void shuffle_box(int* box)
 				std::swap(box[i], box[dist(rd) % i]);
 }
 
-bool row_col_is_valid(int* sudoku, bool mode, int index, int num)		
+/*
+void shuffle_array(int* arr, int size)		
+{
+		// shuffle initialized box array
+		
+		std::uniform_int_distribution<int> dist(0, (size - 2));
+
+		for (int i = (size - 1); i > 0; i--)
+				std::swap(box[i], box[dist(rd) % i]);
+}
+*/
+
+bool row_col_is_valid(int* sudoku, bool mode, int index, int num)		// rename to RoC_is_valid()	
 {
 		// validates row or column based on mode (mode == false -> check row, mode == true -> check column)
 		// num is for checking a different value than sudoku[index] (checking possible numbers)
@@ -82,7 +94,8 @@ bool sudoku_is_valid(int* sudoku)
 		 
 		bool registered_in_row[A];
 		bool registered_in_col[A];
-		//bool registered_in_box[A] = {false};
+		bool registered_in_box[A];
+		int box_index;
 
 		// checking all rows
 		for (int i = 0; i < N; i += A)
@@ -113,6 +126,25 @@ bool sudoku_is_valid(int* sudoku)
 						else 
 						{
 								printf("index: %d\n", i + j);
+								return false;
+						}
+				}
+		}
+
+		// checking all boxes
+		for (int i = 0; i < A; i++)
+		{
+				reset(registered_in_box, A);
+
+				for (int j = 0; j < A; j++)
+				{
+						box_index = (i / B) * 27 + (i % B) * B + (j / B) * A + j % B;
+
+						if (!registered_in_box[sudoku[box_index] - 1])
+								registered_in_col[sudoku[box_index] - 1] = true;
+						else 
+						{
+								printf("index: %d\n", box_index);
 								return false;
 						}
 				}
@@ -157,7 +189,7 @@ bool is_available(int index, int candidate_index, bool mode)
 		{
 				if (index / A >= candidate_index / A)		// only number that's below index
 						return false;
-				if (index % A < index / A)							// number that's in the sorted part
+				if (index % A < index / A)							// index is in the sorted part
 				{
 						if (index % A == candidate_index % A)		// number that's in the same column as index
 								return true;
@@ -171,7 +203,7 @@ bool is_available(int index, int candidate_index, bool mode)
 		{
 				if (index % A >= candidate_index % A)		// only number that's on the right side of index
 						return false;
-				if (index / A <= index % A)							// number that's in the sorted part
+				if (index / A <= index % A)							// index is in the sorted part
 				{
 						if (index / A == candidate_index / A)		// number that's in the same row as index
 								return true;
