@@ -20,12 +20,23 @@ int main()
 		clock_t start = clock();
 		clock_t end;
 
+		init_sudoku(sudoku);
+		sort_sudoku(sudoku);
+		strip_sudoku(sudoku);
+
+		print_sudoku(sudoku);
+
+		end = clock();
+		time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+		printf("counter %d, time taken: %f\n", counter, time_taken);
+
+		/*
 		while (true)
 		{
 				counter++;
 				init_sudoku(sudoku);
 				sort_sudoku(sudoku);
-				//strip_sudoku(sudoku);
+				strip_sudoku(sudoku);
 
 				if (counter % 100000 == 0)
 				{
@@ -37,13 +48,12 @@ int main()
 
 				if (!sudoku_is_valid(sudoku))
 				{
-						print(sudoku);
+						print_sudoku(sudoku);
 						printf("counter: %d\n", counter);
 						break;
 				}
 		}
-
-		// puzzle_sudoku(sudoku);
+		*/
 
     return 0;
 }

@@ -4,11 +4,17 @@
 #define A 9
 #define B 3
 
-void print(int*);
+void print_sudoku(int*);
 
-void shuffle_box(int*);
+void print_candidates(int(*)[10]);
+
+void shuffle_array(int*, int);
+
+void fill_array(int*, int);
 
 bool row_col_is_valid(int*, bool, int, int);
+
+bool box_is_valid(int*, int, int);
 
 void reset(bool*, int);
 

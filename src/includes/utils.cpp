@@ -7,7 +7,7 @@
 
 std::random_device rd;
 
-void print(int* sudoku)		
+void print_sudoku(int* sudoku)		
 {
 		// formats the sudoku grid for better readability
 		
@@ -32,34 +32,86 @@ void print(int* sudoku)
 		printf("%s\n", line);
 }
 
-
-void shuffle_box(int* box)
+int max_val(int arr[][10], int col)
 {
-		// shuffle initialized box array
-		
-		std::uniform_int_distribution<int> dist(0, 7);
+		//fix this
+		int max = arr[col][A];
 
-		for (int i = 8; i > 0; i--)
-				std::swap(box[i], box[dist(rd) % i]);
+		for (int i = col; i < N; i += A)
+				if (arr[col][A] > max)
+						max = arr[col][i]; 
+
+		return max;
 }
 
-/*
-void shuffle_array(int* arr, int size)		
+void print_candidates(int candidates[][10])
+{
+		//fix this
+		int column_width[A] = {0};
+
+		for (int i = 0; i < A; i++)
+				column_width[i] = max_val(candidates, i);
+
+		printf("\n");
+		
+		for (int i = 0; i < N; i++)
+		{
+				if (i % 27 == 0)
+				{
+						for (int j = 0; j < A; j++)
+						{
+								printf("+");
+								for (int k = 0; k < (column_width[j] + 2); k++)
+										printf("-");
+						}
+						printf("+\n");
+				}
+
+				printf("|");
+
+				for (int j = 0; j < column_width[j]; j++)
+				{
+						printf(" ");
+						printf("%d", candidates[i][j]);
+				}
+
+				if (i % A == 8)
+						printf(" |\n");
+				else
+						printf(" ");
+		}
+
+		for (int j = 0; j < A; j++)
+		{
+				printf("+");
+				for (int k = 0; k < (column_width[j] + 2); k++)
+						printf("-");
+		}
+		printf("+\n");
+}
+
+void shuffle_array(int* arr, int size)
 {
 		// shuffle initialized box array
 		
 		std::uniform_int_distribution<int> dist(0, (size - 2));
 
 		for (int i = (size - 1); i > 0; i--)
-				std::swap(box[i], box[dist(rd) % i]);
+				std::swap(arr[i], arr[dist(rd) % i]);
 }
-*/
+
+void fill_array(int* arr, int size)
+{
+		// inserts unique values from 0 to 'size' into given array (size - 1 to be exact)
+
+		for (int i = 0; i < size; i++)
+				arr[i] = i;
+}
 
 bool row_col_is_valid(int* sudoku, bool mode, int index, int num)		// rename to RoC_is_valid()	
 {
 		// validates row or column based on mode (mode == false -> check row, mode == true -> check column)
 		// num is for checking a different value than sudoku[index] (checking possible numbers)
-		// checking of the num parameter doesn't work yet
 
 		if (index == 0)
 				return true;
@@ -76,6 +128,27 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)		// rename to 
 		return true;
 }
 
+bool box_is_valid(int* sudoku, int index, int num)
+{
+		// validates 3*3 box
+		// num parameter is for checking different number than sudoku[index]
+		
+		int value = (num == 0) ? (sudoku[index]) : num;
+		int box_id = (index / 27) * B + (index % A) / B;
+		int first_index = (box_id / B) * 27 + (box_id % B) * B;
+		int box_index;
+
+		for (int i = 0; i < A; i++)
+		{
+				box_index = first_index + (i / B) * A + i % B;
+
+				if (i != index && sudoku[box_index] == value)
+						return false;
+		}
+
+		return true;
+}
+
 void reset (bool* arr, int size)
 {
 		// sets all elements of given bool array to 0 (false)
@@ -88,9 +161,8 @@ void reset (bool* arr, int size)
 
 bool sudoku_is_valid(int* sudoku)
 {
-		// basically just repeatedly calls row_col_is_valid in both modes to check all rows and cols
-		// pozn. vylepsit: pouzit bool array a pokud bude prvek zaznamenan nastavi se index o jeho hodnote na true,
-		// pokud po cele iteraci bude nejaky prvek false -> return false jinak true
+		// i could've just used the RoC_is_valid and box_is_valid functions called repeatedly, but this
+		// is a bit quicker and simpler
 		 
 		bool registered_in_row[A];
 		bool registered_in_col[A];
@@ -108,7 +180,7 @@ bool sudoku_is_valid(int* sudoku)
 								registered_in_row[sudoku[i + j] - 1] = true;
 						else 
 						{
-								printf("index: %d\n", i + j);
+								printf("Failed at index: %d\n", i + j);
 								return false;
 						}
 				}
@@ -125,7 +197,7 @@ bool sudoku_is_valid(int* sudoku)
 								registered_in_col[sudoku[i + j] - 1] = true;
 						else 
 						{
-								printf("index: %d\n", i + j);
+								printf("Failed at index: %d\n", i + j);
 								return false;
 						}
 				}
@@ -144,7 +216,7 @@ bool sudoku_is_valid(int* sudoku)
 								registered_in_col[sudoku[box_index] - 1] = true;
 						else 
 						{
-								printf("index: %d\n", box_index);
+								printf("Failed at index: %d\n", box_index);
 								return false;
 						}
 				}

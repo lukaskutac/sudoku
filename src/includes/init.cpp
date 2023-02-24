@@ -25,7 +25,7 @@ void init_sudoku(int* sudoku)
 
 		for (int i = 0; i < A; i++)
 		{
-				shuffle_box(box);
+				shuffle_array(box, A);
 
 				for (int j = 0; j < A; j++)
 				{
