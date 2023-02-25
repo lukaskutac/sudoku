@@ -8,6 +8,8 @@ void print_sudoku(int*);
 
 void print_candidates(int(*)[10]);
 
+void remove_candidates(int(*)[10], int, int);
+
 void shuffle_array(int*, int);
 
 void fill_array(int*, int);

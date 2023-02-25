@@ -7,6 +7,13 @@
 
 std::random_device rd;
 
+// TODO:
+// [ ] unify parameter order
+// [ ] less redundacy (for ex. sudoku_is_valid)
+// [ ] define which functions are used as help for development (by me) and which are used by the program itself
+// [ ] rename functions which have dumb or long names
+// [ ] remove unnecessary functions (for ex. is_available)
+
 void print_sudoku(int* sudoku)		
 {
 		// formats the sudoku grid for better readability
@@ -38,8 +45,8 @@ int max_val(int arr[][10], int col)
 		int max = arr[col][A];
 
 		for (int i = col; i < N; i += A)
-				if (arr[col][A] > max)
-						max = arr[col][i]; 
+				if (arr[i][A] > max)
+						max = arr[i][A]; 
 
 		return max;
 }
@@ -56,38 +63,55 @@ void print_candidates(int candidates[][10])
 		
 		for (int i = 0; i < N; i++)
 		{
-				if (i % 27 == 0)
+				if (i % A == 0)
 				{
 						for (int j = 0; j < A; j++)
 						{
-								printf("+");
+								printf("%s", j % B == 0 ? "++" : "+");
+
 								for (int k = 0; k < (column_width[j] + 2); k++)
-										printf("-");
+										printf("%c", i % 27 == 0 ? '=' : '-');
 						}
-						printf("+\n");
+						printf("++\n");
+
+						printf("|| ");
 				}
 
-				printf("|");
-
-				for (int j = 0; j < column_width[j]; j++)
+				for (int j = 0; j < column_width[i % A]; j++)
 				{
-						printf(" ");
-						printf("%d", candidates[i][j]);
+						if (candidates[i][j] != 0)
+								printf("%d", candidates[i][j]);
+						else
+								printf(" ");
 				}
 
 				if (i % A == 8)
-						printf(" |\n");
+						printf(" ||\n");
+				else if (i % B == 2)
+						printf(" || ");
 				else
-						printf(" ");
+						printf(" | ");
 		}
 
 		for (int j = 0; j < A; j++)
 		{
-				printf("+");
+				printf("%s", j % B == 0 ? "++" : "+");
+
 				for (int k = 0; k < (column_width[j] + 2); k++)
-						printf("-");
+						printf("=");
 		}
-		printf("+\n");
+		printf("++\n");
+}
+
+void remove_candidates(int candidates[][10], int index, int unique_num)
+{
+		if (candidates[index][A] == 1)
+				return;
+
+		candidates[index][0] = unique_num;
+
+		for (int i = 1; i < candidates[index][A]; i++)
+				candidates[index][i] = 0;
 }
 
 void shuffle_array(int* arr, int size)
@@ -113,7 +137,7 @@ bool row_col_is_valid(int* sudoku, bool mode, int index, int num)		// rename to 
 		// validates row or column based on mode (mode == false -> check row, mode == true -> check column)
 		// num is for checking a different value than sudoku[index] (checking possible numbers)
 
-		if (index == 0)
+		if (index == 0 && num == 0)
 				return true;
 
 		int value = (num == 0) ? sudoku[index] : num;
