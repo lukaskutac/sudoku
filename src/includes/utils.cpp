@@ -51,10 +51,11 @@ int max_val(int arr[][10], int col)
 		return max;
 }
 
-void print_candidates(int candidates[][10])
+void print_candidates(int candidates[][10], int* given)
 {
-		//fix this
 		int column_width[A] = {0};
+		int given_index = 0; 
+		bool printed_given;
 
 		for (int i = 0; i < A; i++)
 				column_width[i] = max_val(candidates, i);
@@ -79,10 +80,22 @@ void print_candidates(int candidates[][10])
 
 				for (int j = 0; j < column_width[i % A]; j++)
 				{
+						if (given[given_index] == i)
+						{
+								printf("\33[0;35m");
+								printed_given = true;
+								given_index++;
+						}
+
 						if (candidates[i][j] != 0)
+						{
 								printf("%d", candidates[i][j]);
+								if (printed_given)
+										printf("\33[0m");
+						}
 						else
 								printf(" ");
+
 				}
 
 				if (i % A == 8)
@@ -103,15 +116,36 @@ void print_candidates(int candidates[][10])
 		printf("++\n");
 }
 
-void remove_candidates(int candidates[][10], int index, int unique_num)
+void remove_candidates(int candidates[][10], int mode, int index, int unique_num)
 {
+		int first_index;
+		int incrementor;
+
 		if (candidates[index][A] == 1)
-				return;
+				goto skip;
 
 		candidates[index][0] = unique_num;
 
 		for (int i = 1; i < candidates[index][A]; i++)
 				candidates[index][i] = 0;
+
+skip:
+
+		if (mode == 0)
+		{
+				first_index = index / A * A;
+				incrementor = 1;
+		}
+		else if (mode == 1)
+		{
+				first_index = index % A;
+				incrementor = A;
+		}
+		else if (mode == 2)
+		{
+				int box_id = (index / 27) * B + (index % A) / B;
+				first_index = (box_id / B) * 27 + (box_id % B) * B;
+		}
 }
 
 void shuffle_array(int* arr, int size)

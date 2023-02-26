@@ -19,7 +19,7 @@ void strip_sudoku(int* sudoku)
 		fill_array(indices, N);
 		shuffle_array(indices, N); // don't do that 
 
-		for (int i = 0; i < 50; i++)		// maybe there's some logic to removing the numbers (so far it's random)
+		for (int i = 0; i < 30; i++)		// maybe there's some logic to removing the numbers (so far it's random)
 		{
 				sudoku[indices[i]] = 0;
 				/*

@@ -19,6 +19,7 @@
 void single_solver(int candidates[][10])
 {
 		// if there's a number that only fits one field in row/col/box remove all other candidates from this field (i think)
+		// and remove this candidate from all fields in the row/col/box it is unique to
 		// TODO:
 		// [ ] add a cycle for changing modes so that the code isn't repeated so much (kinda like utils::sudoku_is_valid)
 		// [ ] determine the wheter number is unique using the registered method
@@ -34,40 +35,43 @@ void single_solver(int candidates[][10])
 				//reset(registered, A);
 				index = i * A;
 
-				for (int j = 0; j < candidates[index][A]; j++)
+				for (int j = 0; j < A; j++)
 				{
-						unique = true;
-
-						if (!checked[candidates[index][j] - 1])
-								checked[candidates[index][j] - 1] = true;
-						else
-								continue;
-
-						for (int k = i * A; k < A; k++)
+						for (int k = 0; k < candidates[index + j][A]; k++)
 						{
-								if (k == index)
+								unique = true;
+
+								if (!checked[candidates[index + j][k] - 1])
+										checked[candidates[index + j][k] - 1] = true;
+								else
 										continue;
 
-								for (int l = 0; l < candidates[k][A]; l++)
-										if (candidates[k][j] == candidates[index][j])
-												unique = false;
+								for (int l = index; l < index + A; l++)
+								{
+										if (l == index + j)
+												continue;
+
+										for (int m = 0; m < candidates[l][A]; m++)
+												if (candidates[l][m] == candidates[index + j][k])
+														unique = false;
+								}
+
+								if (unique)
+										remove_candidates(candidates, 0, index, candidates[index][k]);
 						}
-
-						if (unique)
-								remove_candidates(candidates, index, candidates[index][j]);
-
-						index++;
 				}
 		}
 }
 
-void basic_candidates(int* sudoku, int candidates[][10])
+void basic_candidates(int* sudoku, int candidates[][10], int* given)
 {
 		// finds all numbers that could be placed in a certain field that follow the basic sudoku rules 
 		// (number appears only once in every row/col/box)
 		
+		int gc = 0;			// given counter
 
 		for (int i = 0; i < N; i++)
+		{
 				if (sudoku[i] == 0)	// maybe set candidates to sudoku[i] in different color for better readability
 						for (int j = 1; j <= A; j++)
 						{
@@ -79,16 +83,24 @@ void basic_candidates(int* sudoku, int candidates[][10])
 										candidates[i][A]++;
 								}
 						}
+				else
+				{
+						candidates[i][0] = sudoku[i];
+						given[gc] = i;
+						gc++;
+				}
+		}
 }
 
 void find_candidates(int* sudoku)
 {
 		int candidates[N][10] = {0};		// 10 because one extra integer serves as candidate counter
-																		//
-		basic_candidates(sudoku, candidates);
-		print_candidates(candidates);
+	  int given[N] = {0};							// numbers that are given by sudoku
+
+		basic_candidates(sudoku, candidates, given);
+		print_candidates(candidates, given);
 		single_solver(candidates);
-		print_candidates(candidates);
+		print_candidates(candidates, given);
 }
 
 

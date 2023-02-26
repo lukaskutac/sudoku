@@ -6,9 +6,9 @@
 
 void print_sudoku(int*);
 
-void print_candidates(int(*)[10]);
+void print_candidates(int(*)[10], int*);
 
-void remove_candidates(int(*)[10], int, int);
+void remove_candidates(int(*)[10], int, int, int);
 
 void shuffle_array(int*, int);
 
