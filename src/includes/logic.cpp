@@ -22,45 +22,67 @@ void single_solver(int candidates[][10])
 		// and remove this candidate from all fields in the row/col/box it is unique to
 		// TODO:
 		// [ ] add a cycle for changing modes so that the code isn't repeated so much (kinda like utils::sudoku_is_valid)
-		// [ ] determine the wheter number is unique using the registered method
-		// also it doesn't work, it only does something with the first col for some reason + it's not even correct
+		// [ ] determine the whether number is unique using the registered method
+		// [ ] rename name
 		
-		bool checked[A] = {false};
+		bool checked[A];
 		//bool registered[A];
 		bool unique;
 		int index;
+		int offset;
+		int name;				// i really didn't know what to call this one so it's just name but basically it's another offset
 
-		for (int i = 0; i < A; i++)
-		{
-				//reset(registered, A);
-				index = i * A;
-
-				for (int j = 0; j < A; j++)
+		for (int x = 0; x < B; x++)			// switching modes
+				for (int i = 0; i < A; i++)			// switching row/col/box 
 				{
-						for (int k = 0; k < candidates[index + j][A]; k++)
+						reset(checked, A);
+
+						for (int j = 0; j < A; j++)			// switching fields within row/col/box
 						{
-								unique = true;
+								// index formula depends on whether we want to check row/col/box
+								index = (x == 0) ? (i * A) : ((x == 1) ? i : (i / B * 27 + i % B * B));
+								offset = (x == 0) ? j : ((x == 1) ? (j * A) : (j % B + j / B * A));
 
-								if (!checked[candidates[index + j][k] - 1])
-										checked[candidates[index + j][k] - 1] = true;
-								else
-										continue;
-
-								for (int l = index; l < index + A; l++)
+								for (int k = 0; k < candidates[index + offset][A]; k++)	// going through candidates within field
 								{
-										if (l == index + j)
+										unique = true;
+
+										if (!checked[candidates[index + offset][k] - 1])
+												checked[candidates[index + offset][k] - 1] = true;
+										else
+										{
+												//printf("index: %d - already checked %d in row %d\n", index + j, candidates[index + j][k], i);
 												continue;
+										}
 
-										for (int m = 0; m < candidates[l][A]; m++)
-												if (candidates[l][m] == candidates[index + j][k])
-														unique = false;
+										for (int l = 0; l < A; l++)			// going through fields in the same row/col/box to compare them
+										{
+												name = (x == 0) ? l : ((x == 1) ? (l * A) : (l % B + l / B * A));
+
+												if (index + name == index + offset)
+														continue;
+
+												for (int m = 0; m < candidates[index + name][A]; m++)			// going through candidates of all fields in the same row
+														if (candidates[index + name][m] == candidates[index + offset][k])
+														{
+																//printf("match: %d with: %d (number: %d)\n", (index + j), l, candidates[index + j][k]);
+																unique = false;
+																break;
+														}
+
+												if (!unique)
+														break;
+										}
+
+										if (unique)
+										{
+												printf("unique at: %d in mode: %d (number: %d)\n", index + offset, x, candidates[index + offset][k]);
+												remove_candidates(candidates, index + offset, candidates[index + offset][k]);
+												break;
+										}
 								}
-
-								if (unique)
-										remove_candidates(candidates, 0, index, candidates[index][k]);
 						}
 				}
-		}
 }
 
 void basic_candidates(int* sudoku, int candidates[][10], int* given)

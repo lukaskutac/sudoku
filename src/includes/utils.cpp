@@ -55,12 +55,13 @@ void print_candidates(int candidates[][10], int* given)
 {
 		int column_width[A] = {0};
 		int given_index = 0; 
-		bool printed_given;
+		bool used_color;
 
 		for (int i = 0; i < A; i++)
 				column_width[i] = max_val(candidates, i);
 
 		printf("\n");
+		printf("\33[0;37m");
 		
 		for (int i = 0; i < N; i++)
 		{
@@ -82,20 +83,27 @@ void print_candidates(int candidates[][10], int* given)
 				{
 						if (given[given_index] == i)
 						{
-								printf("\33[0;35m");
-								printed_given = true;
+								printf("\33[0;31m");
+								used_color = true;
 								given_index++;
+						}
+						else if (candidates[i][A] == 0 || candidates[i][A] == 1)
+						{
+								printf("\33[0;32m");
+								used_color = true;
 						}
 
 						if (candidates[i][j] != 0)
 						{
 								printf("%d", candidates[i][j]);
-								if (printed_given)
-										printf("\33[0m");
+								if (used_color)
+										printf("\33[0;37m");
 						}
 						else
+						{
 								printf(" ");
-
+								printf("\33[0;37m");
+						}
 				}
 
 				if (i % A == 8)
@@ -116,10 +124,12 @@ void print_candidates(int candidates[][10], int* given)
 		printf("++\n");
 }
 
-void remove_candidates(int candidates[][10], int mode, int index, int unique_num)
+void remove_candidates(int candidates[][10], int index, int unique_num)
 {
 		int first_index;
 		int incrementor;
+		int box_id = (index / 27) * B + (index % A) / B;
+		// first_index = (box_id / B) * 27 + (box_id % B) * B;
 
 		if (candidates[index][A] == 1)
 				goto skip;
@@ -129,23 +139,12 @@ void remove_candidates(int candidates[][10], int mode, int index, int unique_num
 		for (int i = 1; i < candidates[index][A]; i++)
 				candidates[index][i] = 0;
 
+		candidates[index][A] = 0;
+
 skip:
 
-		if (mode == 0)
-		{
-				first_index = index / A * A;
-				incrementor = 1;
-		}
-		else if (mode == 1)
-		{
-				first_index = index % A;
-				incrementor = A;
-		}
-		else if (mode == 2)
-		{
-				int box_id = (index / 27) * B + (index % A) / B;
-				first_index = (box_id / B) * 27 + (box_id % B) * B;
-		}
+		return;
+
 }
 
 void shuffle_array(int* arr, int size)
