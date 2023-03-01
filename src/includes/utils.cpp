@@ -24,7 +24,8 @@ void print_sudoku(int* sudoku)
 
 		for (int i = 0; i < A; i++)
 		{
-				if (i % B == 0) printf("%s", line);
+				if (i % B == 0) 
+						printf("%s", line);
 
 				for (int j = 0; j < A; j++)
 				{
@@ -87,7 +88,7 @@ void print_candidates(int candidates[][10], int* given)
 								used_color = true;
 								given_index++;
 						}
-						else if (candidates[i][A] == 0 || candidates[i][A] == 1)
+						else if (candidates[i][A] <= 1)
 						{
 								printf("\33[0;32m");
 								used_color = true;
@@ -124,10 +125,51 @@ void print_candidates(int candidates[][10], int* given)
 		printf("++\n");
 }
 
+bool puzzle_is_solved(int candidates[][10]) 
+{
+		for (int i = 0; i < N; i++)
+				if (candidates[i][A] > 1)
+						return false;
+
+		return true;
+}
+
+int pick_random(int* indices)
+{
+		// put random pick in randomized and then randomly pick one that isnt N
+		int available_indices[N] = {0};
+		int ac = 0;			// available index counter
+		int random;
+		int index;
+
+		for (int i = 0; i < N; i++)
+				if (indices[i] != N)
+				{
+						available_indices[ac] = indices[i];
+						ac++;
+				}
+
+		std::uniform_int_distribution<int> dist(0, (ac - 1));
+
+		printf("ac: %d\n", ac);
+		random = dist(rd);
+
+		return available_indices[random];
+}
+
+bool has_next(int candidates[][10], int index, int candidate_index)
+{
+		if (candidates[index][A] > candidate_index)
+				return true;
+
+		return false;
+}
+
 void remove_candidates(int candidates[][10], int index, int unique_num)
 {
 		int field;
 		int offset;
+		int shift_count;
 
 		if (candidates[index][A] != 1)
 		{
@@ -152,7 +194,20 @@ void remove_candidates(int candidates[][10], int index, int unique_num)
 								if (candidates[field + offset][A] == 1)
 										continue;
 								else if (candidates[index][0] == candidates[field + offset][k])
+								{
 										candidates[field + offset][k] = 0;
+
+										shift_count = k;
+
+										while (has_next(candidates, field + offset, shift_count))		// so that there isn't a blank space (0) between candidates
+										{
+												candidates[field + offset][shift_count] = candidates[field + offset][shift_count + 1];
+												candidates[field + offset][shift_count + 1] = 0;
+												shift_count++;
+										}
+
+										candidates[field + offset][A]--;
+								}
 						}
 				}
 

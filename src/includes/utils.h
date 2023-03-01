@@ -8,6 +8,8 @@ void print_sudoku(int*);
 
 void print_candidates(int(*)[10], int*);
 
+int pick_random(int*);
+
 void remove_candidates(int(*)[10], int, int);
 
 void shuffle_array(int*, int);
@@ -19,6 +21,8 @@ bool row_col_is_valid(int*, bool, int, int);
 bool box_is_valid(int*, int, int);
 
 void reset(bool*, int);
+
+bool puzzle_is_solved(int[][10]);
 
 int previous_instance(int*, int, bool, int);
 

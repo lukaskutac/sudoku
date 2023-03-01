@@ -1,5 +1,5 @@
 #include <iostream>
 
-void find_candidates(int*);
+void solve_sudoku(int*, int[][10]);
 
 

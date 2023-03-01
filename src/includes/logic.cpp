@@ -56,9 +56,6 @@ void single_solver(int candidates[][10])
 								{
 										unique = true;
 
-										if (candidates[index + offset][k] == 0)			// this candidate was previously removed
-												continue;
-
 										if (!checked[candidates[index + offset][k] - 1])		// make sure we check every number once at most
 												checked[candidates[index + offset][k] - 1] = true;
 										else
@@ -115,20 +112,20 @@ void basic_candidates(int* sudoku, int candidates[][10], int* given)
 				else
 				{
 						candidates[i][0] = sudoku[i];
+						candidates[i][A] = 1;
 						given[gc] = i;
 						gc++;
 				}
 		}
 }
 
-void find_candidates(int* sudoku)
+void solve_sudoku(int* sudoku, int candidates[][10])
 {
-		int candidates[N][10] = {0};		// 10 because one extra integer serves as candidate counter
 	  int given[N] = {0};							// numbers that are given by sudoku
 
 		basic_candidates(sudoku, candidates, given);
-		printf("basic: \n");
-		print_candidates(candidates, given);
+		//printf("basic: \n");
+		//print_candidates(candidates, given);
 		single_solver(candidates);
 		printf("single solve: \n");
 		print_candidates(candidates, given);
