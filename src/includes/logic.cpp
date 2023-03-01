@@ -23,14 +23,17 @@ void single_solver(int candidates[][10])
 		// TODO:
 		// [ ] add a cycle for changing modes so that the code isn't repeated so much (kinda like utils::sudoku_is_valid)
 		// [ ] determine the whether number is unique using the registered method
-		// [ ] rename name
+		// [ ] it works but not completely, when it finished it should mark green all single fields and remove this candidate
+		//			from all other fields (idea: lower the candidates[index][A] every time you remove candidate and shift them so 
+		//			that they're next to each other with no spaces and if the value of candidates[index][A] == 1 recursively call
+		//			remove_candidates, good luck, hope it works)
 		
 		bool checked[A];
 		//bool registered[A];
 		bool unique;
 		int index;
-		int offset;
-		int name;				// i really didn't know what to call this one so it's just name but basically it's another offset
+		int offset;			// offset for going through all fields of row/col/box
+		int checking_offset;		// offset for going through all fields needed for comaprison
 
 		for (int x = 0; x < B; x++)			// switching modes
 				for (int i = 0; i < A; i++)			// switching row/col/box 
@@ -43,29 +46,34 @@ void single_solver(int candidates[][10])
 								index = (x == 0) ? (i * A) : ((x == 1) ? i : (i / B * 27 + i % B * B));
 								offset = (x == 0) ? j : ((x == 1) ? (j * A) : (j % B + j / B * A));
 
+								if (candidates[index + offset][A] == 1)
+								{
+										remove_candidates(candidates, index + offset, candidates[index + offset][0]);
+										continue;
+								}
+
 								for (int k = 0; k < candidates[index + offset][A]; k++)	// going through candidates within field
 								{
 										unique = true;
 
-										if (!checked[candidates[index + offset][k] - 1])
+										if (candidates[index + offset][k] == 0)			// this candidate was previously removed
+												continue;
+
+										if (!checked[candidates[index + offset][k] - 1])		// make sure we check every number once at most
 												checked[candidates[index + offset][k] - 1] = true;
 										else
-										{
-												//printf("index: %d - already checked %d in row %d\n", index + j, candidates[index + j][k], i);
 												continue;
-										}
 
 										for (int l = 0; l < A; l++)			// going through fields in the same row/col/box to compare them
 										{
-												name = (x == 0) ? l : ((x == 1) ? (l * A) : (l % B + l / B * A));
+												checking_offset = (x == 0) ? l : ((x == 1) ? (l * A) : (l % B + l / B * A));
 
-												if (index + name == index + offset)
+												if (index + checking_offset == index + offset)
 														continue;
 
-												for (int m = 0; m < candidates[index + name][A]; m++)			// going through candidates of all fields in the same row
-														if (candidates[index + name][m] == candidates[index + offset][k])
+												for (int m = 0; m < candidates[index + checking_offset][A]; m++)			// going through candidates of all fields in the same row
+														if (candidates[index + checking_offset][m] == candidates[index + offset][k])
 														{
-																//printf("match: %d with: %d (number: %d)\n", (index + j), l, candidates[index + j][k]);
 																unique = false;
 																break;
 														}
@@ -76,7 +84,6 @@ void single_solver(int candidates[][10])
 
 										if (unique)
 										{
-												printf("unique at: %d in mode: %d (number: %d)\n", index + offset, x, candidates[index + offset][k]);
 												remove_candidates(candidates, index + offset, candidates[index + offset][k]);
 												break;
 										}
@@ -94,7 +101,7 @@ void basic_candidates(int* sudoku, int candidates[][10], int* given)
 
 		for (int i = 0; i < N; i++)
 		{
-				if (sudoku[i] == 0)	// maybe set candidates to sudoku[i] in different color for better readability
+				if (sudoku[i] == 0)			// if number was removed
 						for (int j = 1; j <= A; j++)
 						{
 								if (!box_is_valid(sudoku, i, j))
@@ -120,8 +127,10 @@ void find_candidates(int* sudoku)
 	  int given[N] = {0};							// numbers that are given by sudoku
 
 		basic_candidates(sudoku, candidates, given);
+		printf("basic: \n");
 		print_candidates(candidates, given);
 		single_solver(candidates);
+		printf("single solve: \n");
 		print_candidates(candidates, given);
 }
 

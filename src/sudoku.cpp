@@ -14,16 +14,22 @@
 
 int main()
 {
-    int sudoku[81] = {0};
+    int sudoku[N] = {0};
+		int solution[N] = {0};
 		int counter = 0;
 		double time_taken;
 		clock_t start = clock();
 		clock_t end;
 
+		printf("\033[0;37m");
+
 		init_sudoku(sudoku);
 		sort_sudoku(sudoku);
+		save_solution(sudoku, solution);
 		strip_sudoku(sudoku);
-
+		printf("solution:\n");
+		print_sudoku(solution);
+		printf("puzzle:\n");
 		print_sudoku(sudoku);
 
 		end = clock();

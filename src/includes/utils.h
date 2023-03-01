@@ -26,4 +26,6 @@ bool sudoku_is_valid(int*);
 
 void swap_ROC(int*, int, int, int, bool);
 
+void save_solution(int*, int*);
+
 bool is_available(int, int, bool);

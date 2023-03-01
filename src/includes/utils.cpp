@@ -126,25 +126,37 @@ void print_candidates(int candidates[][10], int* given)
 
 void remove_candidates(int candidates[][10], int index, int unique_num)
 {
-		int first_index;
-		int incrementor;
-		int box_id = (index / 27) * B + (index % A) / B;
-		// first_index = (box_id / B) * 27 + (box_id % B) * B;
+		int field;
+		int offset;
 
-		if (candidates[index][A] == 1)
-				goto skip;
+		if (candidates[index][A] != 1)
+		{
+				for (int i = 1; i < candidates[index][A]; i++)
+						candidates[index][i] = 0;
 
-		candidates[index][0] = unique_num;
+				candidates[index][0] = unique_num;
+				candidates[index][A] = 1;
+		}
 
-		for (int i = 1; i < candidates[index][A]; i++)
-				candidates[index][i] = 0;
+		for (int x = 0; x < B; x++)
+				for (int i = 0; i < A; i++)
+				{
+						field = (x == 0) ? (index / A * A) : ((x == 1) ? (index % A) : (index / 27 * 27 + (index % A) / B * B));
+						offset = (x == 0) ? i : ((x == 1) ? (i * A) : (i % B + i / B * A));
 
-		candidates[index][A] = 0;
+						if (index == (field + offset))
+								continue;
 
-skip:
+						for (int k = 0; k < candidates[field + offset][A]; k++)
+						{
+								if (candidates[field + offset][A] == 1)
+										continue;
+								else if (candidates[index][0] == candidates[field + offset][k])
+										candidates[field + offset][k] = 0;
+						}
+				}
 
 		return;
-
 }
 
 void shuffle_array(int* arr, int size)
@@ -304,6 +316,12 @@ void swap_ROC(int* sudoku, int f_ix, int l_ix, int inc, bool recursion)
 
 		for (int i = f_ix; i <= l_ix; i += inc)
 				std::swap(sudoku[i], sudoku[i + offset]);
+}
+
+void save_solution(int* sudoku, int* solution)
+{
+		for (int i = 0; i < N; i++)
+				solution[i] = sudoku[i];
 }
 
 bool is_available(int index, int candidate_index, bool mode)
