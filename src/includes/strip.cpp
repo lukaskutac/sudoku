@@ -34,7 +34,9 @@ void strip_sudoku(int* sudoku)
 				if (i % A == 0)
 						fill_array(indices, N);
 
+				// improve picking nubmers so that i don't pick already removed numbers
 				ri = pick_random(indices);		// pick a random available index 
+				printf(", i: %d\n", i);
 				help = sudoku[ri];
 				sudoku[ri] = 0;
 

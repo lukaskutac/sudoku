@@ -84,6 +84,32 @@ void print_candidates(int candidates[][10], int* given)
 				{
 						if (given[given_index] == i)
 						{
+								printf("\33[0;35m");
+								used_color = true;
+								given_index++;
+						}
+						else if (candidates[i][A] <= 1)
+						{
+								printf("\33[0;32m");
+								used_color = true;
+						}
+						else
+								printf("\33[0;31m");
+
+						if (candidates[i][j] != 0)
+						{
+								printf("%d", candidates[i][j]);
+								if (used_color)
+								printf("\33[0;37m");
+						}
+						else
+						{
+								printf(" ");
+								printf("\33[0;37m");
+						}
+						/*
+						if (given[given_index] == i)
+						{
 								printf("\33[0;31m");
 								used_color = true;
 								given_index++;
@@ -105,6 +131,7 @@ void print_candidates(int candidates[][10], int* given)
 								printf(" ");
 								printf("\33[0;37m");
 						}
+						*/
 				}
 
 				if (i % A == 8)
@@ -151,8 +178,8 @@ int pick_random(int* indices)
 
 		std::uniform_int_distribution<int> dist(0, (ac - 1));
 
-		printf("ac: %d\n", ac);
 		random = dist(rd);
+		printf("ac: %d, index: %d", ac, available_indices[random]);
 
 		return available_indices[random];
 }
@@ -207,6 +234,14 @@ void remove_candidates(int candidates[][10], int index, int unique_num)
 										}
 
 										candidates[field + offset][A]--;
+
+										// change condition so that its only true if im not gonna check it in the future in single sort
+										// (it's behind index, to determine this i need to know mode)
+										if (candidates[field + offset][A] == 1)	
+										{
+												//printf("recursive call for index: %d (number %d)\n", field + offset, candidates[field + offset][0]);
+												remove_candidates(candidates, (field + offset), candidates[field + offset][0]);
+										}
 								}
 						}
 				}

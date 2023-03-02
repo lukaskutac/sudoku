@@ -21,7 +21,7 @@ void single_solver(int candidates[][10])
 		// if there's a number that only fits one field in row/col/box remove all other candidates from this field (i think)
 		// and remove this candidate from all fields in the row/col/box it is unique to
 		// TODO:
-		// [ ] add a cycle for changing modes so that the code isn't repeated so much (kinda like utils::sudoku_is_valid)
+		// [x] add a cycle for changing modes so that the code isn't repeated so much (kinda like utils::sudoku_is_valid)
 		// [ ] determine the whether number is unique using the registered method
 		// [ ] it works but not completely, when it finished it should mark green all single fields and remove this candidate
 		//			from all other fields (idea: lower the candidates[index][A] every time you remove candidate and shift them so 
@@ -36,7 +36,7 @@ void single_solver(int candidates[][10])
 		int checking_offset;		// offset for going through all fields needed for comaprison
 
 		for (int x = 0; x < B; x++)			// switching modes
-				for (int i = 0; i < A; i++)			// switching row/col/box 
+				for (int i = 0; i < A; i++)			// switching row/col/box depending on mode
 				{
 						reset(checked, A);
 
@@ -56,10 +56,12 @@ void single_solver(int candidates[][10])
 								{
 										unique = true;
 
+										/*
 										if (!checked[candidates[index + offset][k] - 1])		// make sure we check every number once at most
 												checked[candidates[index + offset][k] - 1] = true;
 										else
 												continue;
+										*/
 
 										for (int l = 0; l < A; l++)			// going through fields in the same row/col/box to compare them
 										{
@@ -99,7 +101,7 @@ void basic_candidates(int* sudoku, int candidates[][10], int* given)
 		for (int i = 0; i < N; i++)
 		{
 				if (sudoku[i] == 0)			// if number was removed
-						for (int j = 1; j <= A; j++)
+						for (int j = 1; j <= A; j++)		// checking numbers 1 - 9
 						{
 								if (!box_is_valid(sudoku, i, j))
 										continue;
