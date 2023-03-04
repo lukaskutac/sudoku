@@ -10,7 +10,7 @@ std::random_device rd;
 // TODO:
 // [ ] unify parameter order
 // [ ] less redundacy (for ex. sudoku_is_valid)
-// [ ] define which functions are used as help for development (by me) and which are used by the program itself
+// [ ] move functions which are used as help for development (by me) to a different file (prbly dev.cpp)
 // [ ] rename functions which have dumb or long names
 // [ ] remove unnecessary functions (for ex. is_available)
 
@@ -182,6 +182,15 @@ int pick_random(int* indices)
 		printf("ac: %d, index: %d", ac, available_indices[random]);
 
 		return available_indices[random];
+}
+
+void place_forbidden(int* indices, int* forbidden, int fc)
+{
+		for (int i = 0; i < fc; i++)
+		{
+				printf("placing N at indices[%d]\n", forbidden[i]);
+				indices[forbidden[i]] = N; 
+		}
 }
 
 bool has_next(int candidates[][10], int index, int candidate_index)

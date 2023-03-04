@@ -56,12 +56,10 @@ void single_solver(int candidates[][10])
 								{
 										unique = true;
 
-										/*
 										if (!checked[candidates[index + offset][k] - 1])		// make sure we check every number once at most
 												checked[candidates[index + offset][k] - 1] = true;
 										else
 												continue;
-										*/
 
 										for (int l = 0; l < A; l++)			// going through fields in the same row/col/box to compare them
 										{

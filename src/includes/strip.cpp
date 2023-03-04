@@ -10,7 +10,7 @@
 // [ ] isntead of randomly shuffling array choose a number that has the least possibilities for filling
 //			- when i remove the first number the next number can't be in the same row/col/box as the first 
 //			one and so on
-//			- plus don't remove number of the same value as before
+// [ ] don't pick already removed indices
 
 bool can_solve(int* sudoku)
 {
@@ -24,15 +24,24 @@ bool can_solve(int* sudoku)
 void strip_sudoku(int* sudoku)
 {
 		int indices[N] = {0};
+		int forbidden[N] = {0};
 		int help;
-		int ri;			// random index
+		int ri;					// random index
+		int fc = 0;			// forbidden counter
 		int index;
 		int offset;
 
+		fill_array(indices, N);			// initial filling of the indices array
+
 		for (int i = 0; i < N; i++)
 		{
-				if (i % A == 0)
-						fill_array(indices, N);
+				if (i % A == 0 && i != 0)		// every 9th cycle
+				{
+						printf("filling array\n");
+						fill_array(indices, N);			// reset available indices (otherwise we wouldn't have any)
+						printf("placing forbidden\n");
+						place_forbidden(indices, forbidden, fc);		// place forbidden indices (already removed numbers)
+				}
 
 				// improve picking nubmers so that i don't pick already removed numbers
 				ri = pick_random(indices);		// pick a random available index 
@@ -45,6 +54,10 @@ void strip_sudoku(int* sudoku)
 						sudoku[ri] = help;
 						continue;
 				}
+
+				forbidden[fc] = ri;			// already picked indices (we don't want to pick them again)
+				fc++;
+				printf("fc: %d\n", fc);
 
 				for (int x = 0; x < B; x++)
 						for (int j = 0; j < A; j++)
