@@ -16,7 +16,6 @@ int main()
 {
     int sudoku[N] = {0};
 		int solution[N] = {0};
-		int counter = 0;
 		double time_taken;
 		clock_t start = clock();
 		clock_t end;
@@ -34,32 +33,8 @@ int main()
 
 		end = clock();
 		time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-		printf("counter %d, time taken: %f\n", counter, time_taken);
 
-		/*
-		while (true)
-		{
-				counter++;
-				init_sudoku(sudoku);
-				sort_sudoku(sudoku);
-				strip_sudoku(sudoku);
-
-				if (counter % 100000 == 0)
-				{
-						end = clock();
-						time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-						printf("counter %d, time taken: %f\n", counter, time_taken);
-						start = clock();
-				}
-
-				if (!sudoku_is_valid(sudoku))
-				{
-						print_sudoku(sudoku);
-						printf("counter: %d\n", counter);
-						break;
-				}
-		}
-		*/
+		printf("time: %f\n", time_taken);
 
     return 0;
 }

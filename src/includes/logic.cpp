@@ -8,7 +8,7 @@
 //TODO:
 // [x] candidate operations
 //			find all possible candidates using the three basic rules of sudoku
-// [ ] row/col/boxSolver
+// [x] row/col/boxSolver
 //			if number can be placed in only one field of row/col/box it will be placed there
 // [ ] row/col/boxMatchSolver
 //			if number of candidates, their value and the amount of fields are all equal no other
@@ -127,8 +127,8 @@ void solve_sudoku(int* sudoku, int candidates[][10])
 		//printf("basic: \n");
 		//print_candidates(candidates, given);
 		single_solver(candidates);
-		printf("single solve: \n");
-		print_candidates(candidates, given);
+		//printf("single solve: \n");
+		//print_candidates(candidates, given);
 }
 
 

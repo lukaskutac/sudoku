@@ -37,29 +37,30 @@ void strip_sudoku(int* sudoku)
 		{
 				if (i % A == 0 && i != 0)		// every 9th cycle
 				{
-						printf("filling array\n");
-						fill_array(indices, N);			// reset available indices (otherwise we wouldn't have any)
-						printf("placing forbidden\n");
-						place_forbidden(indices, forbidden, fc);		// place forbidden indices (already removed numbers)
+						fill_array(indices, N);			// refill available indices (otherwise we wouldn't have any)
+						flag_forbidden(indices, forbidden, fc);		// flags forbidden indices (already removed numbers)
 				}
 
 				// improve picking nubmers so that i don't pick already removed numbers
 				ri = pick_random(indices);		// pick a random available index 
-				printf(", i: %d\n", i);
-				help = sudoku[ri];
+
+				if (ri == -1)
+						continue;
+
+				help = sudoku[ri];			// saves original value of number removed from sudoku[ri] in case we need to put it back
 				sudoku[ri] = 0;
 
 				if (!can_solve(sudoku))
 				{
-						sudoku[ri] = help;
+						sudoku[ri] = help;	// we put back the number, because we cannot solve the puzzle without it
 						continue;
 				}
 
-				forbidden[fc] = ri;			// already picked indices (we don't want to pick them again)
+				forbidden[fc] = ri;			// already picked indices (if we picked these again it would have no effect)
 				fc++;
-				printf("fc: %d\n", fc);
 
-				for (int x = 0; x < B; x++)
+				// flags all indices that are related  through row/col/box to removed number
+				for (int x = 0; x < B; x++)			
 						for (int j = 0; j < A; j++)
 						{
 								index = (x == 0) ? (ri / A * A) : ((x == 1) ? ri % A : (ri / 27 * 27 + ri % A / B * B));

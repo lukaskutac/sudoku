@@ -10,7 +10,7 @@ void print_candidates(int(*)[10], int*);
 
 int pick_random(int*);
 
-void place_forbidden(int*, int*, int);
+void flag_forbidden(int*, int*, int);
 
 void remove_candidates(int(*)[10], int, int);
 

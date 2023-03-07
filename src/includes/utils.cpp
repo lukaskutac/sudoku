@@ -163,7 +163,8 @@ bool puzzle_is_solved(int candidates[][10])
 
 int pick_random(int* indices)
 {
-		// put random pick in randomized and then randomly pick one that isnt N
+		// picks a random available index
+
 		int available_indices[N] = {0};
 		int ac = 0;			// available index counter
 		int random;
@@ -176,21 +177,22 @@ int pick_random(int* indices)
 						ac++;
 				}
 
+		if (ac == 0)
+				return -1;
+
 		std::uniform_int_distribution<int> dist(0, (ac - 1));
 
 		random = dist(rd);
-		printf("ac: %d, index: %d", ac, available_indices[random]);
 
 		return available_indices[random];
 }
 
-void place_forbidden(int* indices, int* forbidden, int fc)
+void flag_forbidden(int* indices, int* forbidden, int fc)
 {
 		for (int i = 0; i < fc; i++)
-		{
-				printf("placing N at indices[%d]\n", forbidden[i]);
 				indices[forbidden[i]] = N; 
-		}
+
+		return;
 }
 
 bool has_next(int candidates[][10], int index, int candidate_index)
