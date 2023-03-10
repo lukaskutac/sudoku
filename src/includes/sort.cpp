@@ -12,10 +12,7 @@ bool row_col_fix(int* sudoku, bool mode, int index)
 		// optimize: don't check the whole box, just the possible indeces (under or right to the index)
 		bool tried_prev = false;
 
-		// i dont need is available
 try_prev:
-		//int first_index = ((index % A) / B) * B + (index / 27) * 27 + mode ? ((index % A) % B) : ((index / A) % B) * A;		// first index of first row inside of box cotaining index (the parameter)
-		//int last_index = (first_index / 27 + 1) * 27;
 
 		int first_index = ((index % A) / B) * B + (index / 27) * 27;
 		int last_index = first_index + 27;
@@ -44,7 +41,6 @@ bool try_swap(int* sudoku, bool mode, int index, bool backtrack)
 		// forces to switch the repeating number with the adjacent number so then a different number 
 		// is being repeated, then it forces to switch this number's previous instance with the number 
 		// adjacent to it and it just repeats that until the row/col is sorted
-		// if that doesn't work it switches whole rows/cols and tries again
 		
 		int swap_index = index;
 		int offset = backtrack ? (mode ? 2 : 18) : (mode ? 1 : A);
@@ -58,9 +54,6 @@ try_again:
 		counter = 0;
 		looped = false;
 
-		//printf("before: \n");
-		//print(sudoku);
-
 		while (true)
 		{
 				if (swap_index == index && counter != 0) // if we come over the base index 2 times the algorithm is stuck in a loop
@@ -71,15 +64,10 @@ try_again:
 								looped = true;
 				}
 
-				//printf("%d. swapped %d and %d at %d\n", counter, sudoku[swap_index], sudoku[swap_index + offset], swap_index);
 				std::swap(sudoku[swap_index], sudoku[swap_index + offset]);
 				swap_index = previous_instance(sudoku, swap_index, mode, sudoku[swap_index]);
 				if (swap_index < 0)
-				{
-						//printf("success!\n after: \n");
-						//print(sudoku);
 						return true;
-				}
 
 				if (counter % 1000 == 0 && counter != 0)
 						return false;
@@ -88,14 +76,12 @@ try_again:
 		}
 
 		if (next_available)
-		{
 				if (!tried_next)
 				{
 						offset = mode ? 2 : 18;
 						tried_next = true;
 						goto try_again;
 				}
-		}
 
 		return false;
 }

@@ -107,31 +107,6 @@ void print_candidates(int candidates[][10], int* given)
 								printf(" ");
 								printf("\33[0;37m");
 						}
-						/*
-						if (given[given_index] == i)
-						{
-								printf("\33[0;31m");
-								used_color = true;
-								given_index++;
-						}
-						else if (candidates[i][A] <= 1)
-						{
-								printf("\33[0;32m");
-								used_color = true;
-						}
-
-						if (candidates[i][j] != 0)
-						{
-								printf("%d", candidates[i][j]);
-								if (used_color)
-										printf("\33[0;37m");
-						}
-						else
-						{
-								printf(" ");
-								printf("\33[0;37m");
-						}
-						*/
 				}
 
 				if (i % A == 8)

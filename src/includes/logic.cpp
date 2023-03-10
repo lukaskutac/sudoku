@@ -127,8 +127,8 @@ void solve_sudoku(int* sudoku, int candidates[][10])
 		//printf("basic: \n");
 		//print_candidates(candidates, given);
 		single_solver(candidates);
-		//printf("single solve: \n");
-		//print_candidates(candidates, given);
+		printf("single solve: \n");
+		print_candidates(candidates, given);
 }
 
 
