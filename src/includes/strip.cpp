@@ -7,10 +7,10 @@
 #define B 3
 
 // TODO:
-// [ ] isntead of randomly shuffling array choose a number that has the least possibilities for filling
+// [x] isntead of randomly shuffling array choose a number that has the least possibilities for filling
 //			- when i remove the first number the next number can't be in the same row/col/box as the first 
 //			one and so on
-// [ ] don't pick already removed indices
+// [x] don't pick already removed indices
 
 bool can_solve(int* sudoku)
 {

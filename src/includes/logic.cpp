@@ -89,6 +89,35 @@ void single_solver(int candidates[][10])
 				}
 }
 
+void naked_candidates(int candidates[][10])
+{
+		// looks for naked candidates, meaning the number of candidadtes matches the number of cells
+		int index = 0;
+		int offset = 0;
+		
+
+		for (int x = 0; x < B; x++)			// switching modes
+		{
+				for (int i = 0; i < A; i++)
+						for (int j = 0; j < A; j++)
+						{
+								index = (x == 0) ? (i * A) : ((x == 1) ? i : (i / B * 27 + i % B * B));
+								offset = (x == 0) ? j : ((x == 1) ? (j * A) : (j % B + j / B * A));
+
+								for (int k = 2; k < 5; k++)
+								
+						}
+
+
+		}
+
+}
+
+void hidden_candidates(int candidates[][10])
+{
+		// looks for matching candidates hidden in a cluster of candidates
+}
+
 void basic_candidates(int* sudoku, int candidates[][10], int* given)
 {
 		// finds all numbers that could be placed in a certain field that follow the basic sudoku rules 
@@ -127,7 +156,7 @@ void solve_sudoku(int* sudoku, int candidates[][10])
 		//printf("basic: \n");
 		//print_candidates(candidates, given);
 		single_solver(candidates);
-		printf("single solve: \n");
+		printf("match solver:\n");
 		print_candidates(candidates, given);
 }
 
