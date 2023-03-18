@@ -9,8 +9,7 @@
 #define B 3
 
 // TODO:
-// try_swap nefunguje
-// ujednotit poradi parametru (mode, index, ...)
+// [ ] ujednotit poradi parametru (mode, index, ...)
 
 int main()
 {

@@ -6,15 +6,14 @@
 #define B 3
 
 //TODO:
-// [x] candidate operations
+// [x] basic candidates
 //			find all possible candidates using the three basic rules of sudoku
-// [x] row/col/boxSolver
+// [x] single solver
 //			if number can be placed in only one field of row/col/box it will be placed there
-// [ ] row/col/boxMatchSolver
-//			if number of candidates, their value and the amount of fields are all equal no other
-//			candidates are relevant
-// [ ] mutually exclusive region solver
-//			explained on the website
+// [ ] hidden candidates
+//			explained lower
+// [ ] intersecting candidates
+//			explained online
 
 void single_solver(int candidates[][10])
 {
@@ -89,34 +88,72 @@ void single_solver(int candidates[][10])
 				}
 }
 
-void naked_candidates(int candidates[][10])
-{
-		// looks for naked candidates, meaning the number of candidadtes matches the number of cells
-		int index = 0;
-		int offset = 0;
-		
+// skip given cells
+// each cell must have atlest one common candidate (unless its a twin, then it has to have 2 
+// all the time)
+// take a cell, consider its candidates, if some of those are the same as another cell continue
+// else skip this cell, then do cell counter++, the amount of common candidates cannost be lower 
+// then counter 
+//
+// difficulty levels:
+// 1. [ ] easy - solvable by reducing number of candidates to one
+// 2. [ ] medium - solvable by finding hidden/naked twins, triples and quads
+// 3. [ ] hard - solvable by using everything above + by removing intersecting candidates
+//							from certain fields
 
-		for (int x = 0; x < B; x++)			// switching modes
-		{
+void hidden_candidates(int candidates[][10])
+{
+		// looks for sets* of candidates hidden in a cluster of candidates (and also naked candidates*)
+		// *sets - either pairs, triples or quads
+		// *naked candidates - when the amount of fields is eaqual to amount of candidates in those fields
+
+		int possible_sets[A][5] = {0};
+		int num;
+		int index, offset, last_index;
+		bool is_a_set;
+
+		for (int x = 0; x < B; x++)
 				for (int i = 0; i < A; i++)
+				{
 						for (int j = 0; j < A; j++)
 						{
 								index = (x == 0) ? (i * A) : ((x == 1) ? i : (i / B * 27 + i % B * B));
 								offset = (x == 0) ? j : ((x == 1) ? (j * A) : (j % B + j / B * A));
+								last_index = candidates[index + offset][A];
 
-								for (int k = 2; k < 5; k++)
-								
+								for (int k = 0; k < last_index; k++)
+								{
+										num = candidates[index + offset][k];
+
+										possible_sets[num - 1][possible_sets[num - 1][4]] = (index + offset);
+										possible_sets[num - 1][4]++;
+								}
 						}
 
+						for (int j = 0; j < A; j++)
+						{
+								for (int k = j; k < A; k++)
+								{
+										is_a_set = true;
 
-		}
+										if (possible_sets[j][4] == possible_sets[k][4])
+										{
+												for (int l = 0; l < possible_sets[j][4]; l++)
+														if (possible_sets[j][l] != possible_sets[k][l])
+														{
+																is_a_set = false;
+																break;
+														}
+
+												if (is_a_set)
+														printf("is a set!\n");
+										}
+								}
+						}
+				}
 
 }
 
-void hidden_candidates(int candidates[][10])
-{
-		// looks for matching candidates hidden in a cluster of candidates
-}
 
 void basic_candidates(int* sudoku, int candidates[][10], int* given)
 {
@@ -156,8 +193,8 @@ void solve_sudoku(int* sudoku, int candidates[][10])
 		//printf("basic: \n");
 		//print_candidates(candidates, given);
 		single_solver(candidates);
-		printf("match solver:\n");
-		print_candidates(candidates, given);
+		hidden_candidates(candidates);
+//		print_candidates(candidates, given);
 }
 
 

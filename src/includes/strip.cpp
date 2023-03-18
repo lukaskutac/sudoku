@@ -50,6 +50,7 @@ void strip_sudoku(int* sudoku)
 				help = sudoku[ri];			// saves original value of number removed from sudoku[ri] in case we need to put it back
 				sudoku[ri] = 0;
 
+				printf("removing %d. number\n", i);
 				if (!can_solve(sudoku))
 				{
 						sudoku[ri] = help;	// we put back the number, because we cannot solve the puzzle without it
