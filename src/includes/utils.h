@@ -8,7 +8,7 @@ void print_sudoku(int*);
 
 void print_candidates(int(*)[10], int*);
 
-int pick_random(int*);
+int pick_random(int*, int*);
 
 void flag_forbidden(int*, int*, int);
 

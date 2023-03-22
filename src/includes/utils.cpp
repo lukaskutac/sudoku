@@ -136,7 +136,7 @@ bool puzzle_is_solved(int candidates[][10])
 		return true;
 }
 
-int pick_random(int* indices)
+int pick_random(int* indices, int* forbidden)
 {
 		// picks a random available index
 
@@ -152,8 +152,27 @@ int pick_random(int* indices)
 						ac++;
 				}
 
+		/*
 		if (ac == 0)
 				return -1;
+		*/
+
+		if (ac == 0)
+		{
+				int fc = 0;
+
+				for (int i = 0; i < N; i++)
+				{
+						if (forbidden[fc] == i)
+								fc++;
+						else
+						{
+								available_indices[ac] = i;
+								ac++;
+						}
+				}
+		}
+				
 
 		std::uniform_int_distribution<int> dist(0, (ac - 1));
 

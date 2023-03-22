@@ -101,13 +101,22 @@ void single_solver(int candidates[][10])
 // 3. [ ] hard - solvable by using everything above + by removing intersecting candidates
 //							from certain fields
 
-void hidden_candidates(int candidates[][10])
+
+void reset_possible_sets(int arr[][5])
+{
+		for (int i = 0; i < A; i++)
+				for (int j = 0; j < 5; j++)
+						arr[i][j] = 0;
+}
+
+void hidden_candidates(int candidates[][10], int* given) // remove given from pars (i just need it for dev stuff)
 {
 		// looks for sets* of candidates hidden in a cluster of candidates (and also naked candidates*)
 		// *sets - either pairs, triples or quads
-		// *naked candidates - when the amount of fields is eaqual to amount of candidates in those fields
+		// *naked candidates - when the amount of fields is eaqual to amount of distinct candidates in 
+		// those fields
 
-		int possible_sets[A][5] = {0};
+		int possible_sets[A][5];
 		int num;
 		int index, offset, last_index;
 		bool is_a_set;
@@ -115,6 +124,8 @@ void hidden_candidates(int candidates[][10])
 		for (int x = 0; x < B; x++)
 				for (int i = 0; i < A; i++)
 				{
+						reset_possible_sets(possible_sets);
+
 						for (int j = 0; j < A; j++)
 						{
 								index = (x == 0) ? (i * A) : ((x == 1) ? i : (i / B * 27 + i % B * B));
@@ -123,35 +134,55 @@ void hidden_candidates(int candidates[][10])
 
 								for (int k = 0; k < last_index; k++)
 								{
-										num = candidates[index + offset][k];
+										num = candidates[index + offset][k];		// puts candidate into a variable
 
 										possible_sets[num - 1][possible_sets[num - 1][4]] = (index + offset);
-										possible_sets[num - 1][4]++;
+
+										if (possible_sets[num - 1][4] < 3)
+												possible_sets[num - 1][4]++;
+										else
+										{
+												possible_sets[num - 1][4] = A;
+												break;
+										}
 								}
 						}
 
-						for (int j = 0; j < A; j++)
+						for (int j = 0; j < 8; j++)
 						{
-								for (int k = j; k < A; k++)
+								if (possible_sets[j][4] == A)
+										continue;
+
+								for (int k = j + 1; k < A; k++)
 								{
+										if (possible_sets[k][4] == A)
+												continue;
+
 										is_a_set = true;
 
 										if (possible_sets[j][4] == possible_sets[k][4])
 										{
 												for (int l = 0; l < possible_sets[j][4]; l++)
+												{
 														if (possible_sets[j][l] != possible_sets[k][l])
 														{
 																is_a_set = false;
 																break;
 														}
+												}
 
 												if (is_a_set)
-														printf("is a set!\n");
+												{
+														printf("unit id: %d, mode: %d is a set of %d numbers: ", i, x, possible_sets[j][4]);
+														for (int z = 0; z < possible_sets[j][4]; z++)
+																printf("%d, ", candidates[possible_sets[j][z]][z]);
+														printf("\n");
+														print_candidates(candidates, given);
+												}
 										}
 								}
 						}
 				}
-
 }
 
 
@@ -193,7 +224,7 @@ void solve_sudoku(int* sudoku, int candidates[][10])
 		//printf("basic: \n");
 		//print_candidates(candidates, given);
 		single_solver(candidates);
-		hidden_candidates(candidates);
+		hidden_candidates(candidates, given);
 //		print_candidates(candidates, given);
 }
 

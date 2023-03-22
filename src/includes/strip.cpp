@@ -41,14 +41,16 @@ void strip_sudoku(int* sudoku)
 						flag_forbidden(indices, forbidden, fc);		// flags forbidden indices (already removed numbers)
 				}
 
-				// improve picking nubmers so that i don't pick already removed numbers
-				ri = pick_random(indices);		// pick a random available index 
+				ri = pick_random(indices, forbidden);		// pick a random available index 
 
 				if (ri == -1)
 						continue;
 
 				help = sudoku[ri];			// saves original value of number removed from sudoku[ri] in case we need to put it back
 				sudoku[ri] = 0;
+
+				forbidden[fc] = ri;			// already picked indices (it doesn't matter if we end up removing the number or not)
+				fc++;
 
 				printf("removing %d. number\n", i);
 				if (!can_solve(sudoku))
@@ -57,10 +59,7 @@ void strip_sudoku(int* sudoku)
 						continue;
 				}
 
-				forbidden[fc] = ri;			// already picked indices (if we picked these again it would have no effect)
-				fc++;
-
-				// flags all indices that are related  through row/col/box to removed number
+				// flags all indices that are related through row/col/box to removed number
 				for (int x = 0; x < B; x++)			
 						for (int j = 0; j < A; j++)
 						{
