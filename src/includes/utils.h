@@ -4,7 +4,9 @@
 #define A 9
 #define B 3
 
-void print_sudoku(int*);
+void print_sudoku(int*, int*);
+
+void mark_given(int*, int*);
 
 void print_candidates(int(*)[10], int*);
 

@@ -3,37 +3,38 @@
 #include "includes/init.h"
 #include "includes/utils.h"
 #include "includes/strip.h"
+#include "includes/ui.h"
 
 #define N 81
 #define A 9
 #define B 3
 
+// don't include iostream in .h files
+
 int main()
 {
     int sudoku[N] = {0};
 		int solution[N] = {0};
-		double time_taken;
-		clock_t start = clock();
-		clock_t end;
+		bool play;
 
 		printf("\033[0;37m");
 
-		// generating
-		init_sudoku(sudoku);
-		sort_sudoku(sudoku);
-		save_solution(sudoku, solution);
-		strip_sudoku(sudoku);
+		while (true)
+		{
+				play = menu();
 
-		// printing
-		printf("solution:\n");
-		print_sudoku(solution);
-		printf("puzzle:\n");
-		print_sudoku(sudoku);
+				if (!play)
+						return 0;
+				else
+				{
+						init_sudoku(sudoku);
+						sort_sudoku(sudoku);
+						save_solution(sudoku, solution);
+						strip_sudoku(sudoku);
+				}
 
-		end = clock();
-		time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-
-		printf("time: %f\n", time_taken);
+				play_game(sudoku, solution);
+		}
 
     return 0;
 }
