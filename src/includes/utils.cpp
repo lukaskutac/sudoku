@@ -7,13 +7,6 @@
 
 std::random_device rd;
 
-// TODO:
-// [ ] unify parameter order
-// [ ] less redundacy (for ex. sudoku_is_valid)
-// [ ] move functions which are used as help for development (by me) to a different file (prbly dev.cpp)
-// [ ] rename functions which have dumb or long names
-// [ ] remove unnecessary functions (for ex. is_available)
-
 void print_sudoku(int* sudoku)		
 {
 		// formats the sudoku grid for better readability
@@ -42,7 +35,6 @@ void print_sudoku(int* sudoku)
 
 int max_val(int arr[][10], int col)
 {
-		//fix this
 		int max = arr[col][A];
 
 		for (int i = col; i < N; i += A)
@@ -54,6 +46,8 @@ int max_val(int arr[][10], int col)
 
 void print_candidates(int candidates[][10], int* given)
 {
+		// fromatted print of candidates array
+		
 		int column_width[A] = {0};
 		int given_index = 0; 
 		bool used_color;
@@ -129,6 +123,8 @@ void print_candidates(int candidates[][10], int* given)
 
 bool puzzle_is_solved(int candidates[][10]) 
 {
+		// returns true if candidates in all fields have been reduced to exactly one
+
 		for (int i = 0; i < N; i++)
 				if (candidates[i][A] > 1)
 						return false;
@@ -140,24 +136,19 @@ int pick_random(int* indices, int* forbidden)
 {
 		// picks a random available index
 
-		int available_indices[N] = {0};
+		int available_indices[N] = {0};			// array of available indices we can remove
 		int ac = 0;			// available index counter
 		int random;
 		int index;
 
 		for (int i = 0; i < N; i++)
-				if (indices[i] != N)
+				if (indices[i] != N)	// only numbers that aren't related to any of the removed numbers and/or aren't removed themselves 
 				{
 						available_indices[ac] = indices[i];
 						ac++;
 				}
 
-		/*
-		if (ac == 0)
-				return -1;
-		*/
-
-		if (ac == 0)
+		if (ac == 0)		// in case no indices are available we make a list of indices of not yet removed numbers
 		{
 				int fc = 0;
 
@@ -172,7 +163,6 @@ int pick_random(int* indices, int* forbidden)
 						}
 				}
 		}
-				
 
 		std::uniform_int_distribution<int> dist(0, (ac - 1));
 
@@ -244,7 +234,6 @@ void remove_candidates(int candidates[][10], int index, int unique_num)
 										// (it's behind index, to determine this i need to know mode)
 										if (candidates[field + offset][A] == 1)	
 										{
-												//printf("recursive call for index: %d (number %d)\n", field + offset, candidates[field + offset][0]);
 												remove_candidates(candidates, (field + offset), candidates[field + offset][0]);
 										}
 								}
@@ -272,7 +261,7 @@ void fill_array(int* arr, int size)
 				arr[i] = i;
 }
 
-bool row_col_is_valid(int* sudoku, bool mode, int index, int num)		// rename to RoC_is_valid()	
+bool row_col_is_valid(int* sudoku, bool mode, int index, int num)
 {
 		// validates row or column based on mode (mode == false -> check row, mode == true -> check column)
 		// num is for checking a different value than sudoku[index] (checking possible numbers)
@@ -325,8 +314,8 @@ void reset (bool* arr, int size)
 
 bool sudoku_is_valid(int* sudoku)
 {
-		// i could've just used the RoC_is_valid and box_is_valid functions called repeatedly, but this
-		// is a bit quicker and simpler
+		// i could've just used the row_col_is_valid and box_is_valid functions called repeatedly, but this
+		// is a bit quicker and simpler and it is sufficient for what i need it to do
 		 
 		bool registered_in_row[A];
 		bool registered_in_col[A];
@@ -403,14 +392,6 @@ int previous_instance(int* sudoku, int index, bool mode, int num)
 						return i;
 
 		return -1;
-}
-
-void swap_ROC(int* sudoku, int f_ix, int l_ix, int inc, bool recursion)
-{
-		int offset = recursion ? ((inc == 1) ? 18 : 2) : ((inc == 1) ? A : 1);
-
-		for (int i = f_ix; i <= l_ix; i += inc)
-				std::swap(sudoku[i], sudoku[i + offset]);
 }
 
 void save_solution(int* sudoku, int* solution)

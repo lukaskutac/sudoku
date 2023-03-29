@@ -9,7 +9,6 @@ bool row_col_fix(int* sudoku, bool mode, int index)
 {
 		// searches box for a number that is possibly missing in row or column (based on mode)
 
-		// optimize: don't check the whole box, just the possible indeces (under or right to the index)
 		bool tried_prev = false;
 
 try_prev:

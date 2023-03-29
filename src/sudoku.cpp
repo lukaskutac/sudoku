@@ -8,9 +8,6 @@
 #define A 9
 #define B 3
 
-// TODO:
-// [ ] ujednotit poradi parametru (mode, index, ...)
-
 int main()
 {
     int sudoku[N] = {0};
@@ -21,10 +18,13 @@ int main()
 
 		printf("\033[0;37m");
 
+		// generating
 		init_sudoku(sudoku);
 		sort_sudoku(sudoku);
 		save_solution(sudoku, solution);
 		strip_sudoku(sudoku);
+
+		// printing
 		printf("solution:\n");
 		print_sudoku(solution);
 		printf("puzzle:\n");

@@ -6,12 +6,6 @@
 #define A 9
 #define B 3
 
-// TODO:
-// [x] isntead of randomly shuffling array choose a number that has the least possibilities for filling
-//			- when i remove the first number the next number can't be in the same row/col/box as the first 
-//			one and so on
-// [x] don't pick already removed indices
-
 bool can_solve(int* sudoku)
 {
 		int candidates[N][10] = {0};		// 10 because one extra integer serves as candidate counter
@@ -52,7 +46,6 @@ void strip_sudoku(int* sudoku)
 				forbidden[fc] = ri;			// already picked indices (it doesn't matter if we end up removing the number or not)
 				fc++;
 
-				printf("removing %d. number\n", i);
 				if (!can_solve(sudoku))
 				{
 						sudoku[ri] = help;	// we put back the number, because we cannot solve the puzzle without it
