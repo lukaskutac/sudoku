@@ -7,16 +7,19 @@
 
 std::random_device rd;
 
-void print_sudoku(int* sudoku, int* given)		
+void print_sudoku(int* sudoku, bool* given, int current)		
 {
 		// formats the sudoku grid for better readability
 		
 		printf("\n");
 		
 		char line[] = "\t      ------- ------- ------- \n";
+		bool printing_current;
 
 		for (int i = 0; i < A; i++)
 		{
+				printf("\33[0;37m");
+
 				if (i % B == 0) 
 						printf("%s", line);
 
@@ -24,27 +27,43 @@ void print_sudoku(int* sudoku, int* given)
 
 				for (int j = 0; j < A; j++)
 				{
-						if (j % B == 0) printf("| ");
+						if (j % B == 0) 
+								printf("| ");
 
-						if (sudoku[i * A + j] != 0) printf("%d ", sudoku[i * A + j]);
-						else printf(". ");
+						if ((i * A + j) == current)
+						{
+								printing_current = true;
+								printf("\33[7;36m");
+						}
+
+						if (sudoku[i * A + j] != 0) 
+						{
+								if (!printing_current)
+										if (given[i * A + j])
+												printf("\33[1;31m");
+										else
+												printf("\33[0;33m");
+
+								printf("%d", sudoku[i * A + j]);
+						}
+						else 
+								printf(".");
+
+						printing_current = false;
+						printf("\33[0;37m ");
 				}
+
 				printf("|\n");
 		}
 
 		printf("%s\n", line);
 }
 
-void mark_given(int* sudoku, int* given)
+void mark_given(int* sudoku, bool* given)
 {
-		int counter = 0;
-
 		for (int i = 0; i < N; i++)
 				if (sudoku[i] != 0)
-				{
-						given[counter] = i;
-						counter++;
-				}
+						given[i] = true;
 }
 
 int max_val(int arr[][10], int col)

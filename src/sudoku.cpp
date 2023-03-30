@@ -24,7 +24,10 @@ int main()
 				play = menu();
 
 				if (!play)
+				{
+						system("clear");
 						return 0;
+				}
 				else
 				{
 						init_sudoku(sudoku);
